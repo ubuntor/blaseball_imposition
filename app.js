@@ -57,6 +57,7 @@ async function main() {
         'Moist Talkers': [-0.02693604516447873, 0.004706570895140812],
         'Sunbeams': [-0.026859221321570034, 0.02150231524093019],
     }
+    const LEVELS = ["0D", "1D", "2D", "3D", "C", "LowA", "HighA", "AA", "AAA", "AAAA", "AAAAA"];
     const teams = {};
     const noodles = [];
     for (let team of TEAM_IDS) {
@@ -76,6 +77,7 @@ async function main() {
     const DEN_OFF = -1101.7398;
     const columns = [];
     const colors = {};
+    const lines = [];
     for (let team of TEAM_IDS) {
         let nickname = teams[team][0].nickname;
         let data = [nickname];
@@ -97,6 +99,9 @@ async function main() {
         }
         columns.push(data);
     }
+    for (const [i, level] of LEVELS.entries()) {
+        lines.push({value: 0.8-0.2*i, text: level, position: 'start'});
+    }
 
     var chart = c3.generate({
         bindto: '#chart',
@@ -116,6 +121,11 @@ async function main() {
             },
             y: {
                 label: 'imPosition'
+            }
+        },
+        grid: {
+            y: {
+                lines: lines
             }
         }
     });
