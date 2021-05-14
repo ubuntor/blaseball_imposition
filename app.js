@@ -123,6 +123,11 @@ async function main() {
         }
         columns.push(data);
     }
+    const x = ['x'];
+    for (let i = 0; i < start_times.length; i++) {
+        x.push(i+1);
+    }
+    columns.push(x);
     for (const [i, level] of LEVELS.entries()) {
         lines.push({value: 0.8-0.2*i, text: "⬆️ "+level, position: 'start'});
     }
@@ -132,6 +137,7 @@ async function main() {
             height: 480
         },
         data: {
+            x: 'x',
             columns: columns,
             colors: colors
         },
