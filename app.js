@@ -124,7 +124,7 @@ async function main() {
         columns.push(data);
     }
     for (const [i, level] of LEVELS.entries()) {
-        lines.push({value: 1-0.2*i, text: "⬇️ "+level, position: 'start'});
+        lines.push({value: 0.8-0.2*i, text: "⬆️ "+level, position: 'start'});
     }
     var chart = c3.generate({
         bindto: '#chart',
