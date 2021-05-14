@@ -57,7 +57,7 @@ async function main() {
         'Moist Talkers': [-0.02693604516447873, 0.004706570895140812],
         'Sunbeams': [-0.026859221321570034, 0.02150231524093019],
     }
-    const LEVELS = ["0D", "1D", "2D", "3D", "C", "LowA", "HighA", "AA", "AAA", "AAAA", "AAAAA"];
+    const LEVELS = ["0D", "1D", "2D", "3D", "C", "Low A", "High A", "AA", "AAA", "AAAA", "AAAAA"];
     const teams = {};
     const noodles = [];
     for (let team of TEAM_IDS) {
@@ -76,13 +76,34 @@ async function main() {
     const DEN_DENOM = -2768.5;
     const DEN_OFF = -1101.7398;
     const columns = [];
-    const colors = {};
+    const colors = {
+        "Breath Mints": "#00a455",
+        "Crabs": "#cd7672",
+        "Dale": "#8877ee",
+        "Firefighters": "#ff3714",
+        "Flowers": "#cc66dd",
+        "Fridays": "#50a210",
+        "Garages": "#3f88fd",
+        "Jazz Hands": "#6388c8",
+        "Lift": "#f032c9",
+        "Lovers": "#dd6699",
+        "Magic": "#f94965",
+        "Millennials": "#888888",
+        "Moist Talkers": "#3399bb",
+        "Pies": "#339988",
+        "Shoe Thieves": "#bc8519",
+        "Spies": "#9988AA",
+        "Steaks": "#ec5a74",
+        "Sunbeams": "#aa8855",
+        "Tacos": "#aa66ee",
+        "Tigers": "#f05d14",
+        "Wild Wings": "#c87152"
+    };
     const lines = [];
     for (let team of TEAM_IDS) {
         let nickname = teams[team][0].nickname;
         let data = [nickname];
         let [eVelocity, imPosition] = INITIAL[nickname];
-        colors[nickname] = teams[team][0].mainColor;
         for (const [i, t] of teams[team].entries()) {
             let level = t.level;
             let noodle = noodles[i]
@@ -102,7 +123,6 @@ async function main() {
     for (const [i, level] of LEVELS.entries()) {
         lines.push({value: 0.8-0.2*i, text: level, position: 'start'});
     }
-
     var chart = c3.generate({
         bindto: '#chart',
         size: {
