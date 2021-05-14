@@ -71,8 +71,6 @@ async function main() {
         noodles.push(idols[0].data.data.strictlyConfidential);
         console.log("loading day", day);
     }
-    console.log(teams);
-    console.log(noodles);
 
     const DEN_DENOM = -2768.5;
     const DEN_OFF = -1101.7398;
@@ -99,11 +97,12 @@ async function main() {
         }
         columns.push(data);
     }
-    console.log(columns);
-    console.log(colors);
 
     var chart = c3.generate({
         bindto: '#chart',
+        size: {
+            height: 480
+        },
         data: {
             columns: columns,
             colors: colors
