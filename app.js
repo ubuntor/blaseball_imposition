@@ -76,6 +76,14 @@ async function main() {
     }
     document.getElementById("progress").style.display = "none";
 
+    // TODO: noodle overrides for multiple seasons
+    const NOODLE_OVERRIDES = {
+        98: 8
+    }
+    for (let day in NOODLE_OVERRIDES) {
+        noodles[day] = NOODLE_OVERRIDES[day];
+    }
+
     const DEN_DENOM = -2768.5;
     const DEN_OFF = -1101.7398;
     const columns = [];
