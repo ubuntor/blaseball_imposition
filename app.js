@@ -57,12 +57,13 @@ async function main() {
         'Moist Talkers': [-0.02693604516447873, 0.004706570895140812],
         'Sunbeams': [-0.026859221321570034, 0.02150231524093019],
     }
-    const LEVELS = ["0D", "1D", "2D", "3D", "C", "Low A", "High A", "AA", "AAA", "AAAA", "AAAAA"];
+    const LEVELS = ["0D", "1D", "2D", "3D", "C", "Low A 🦈", "High A 🦈🦈", "AA 🦈🦈🦈", "AAA 🦈🦈🦈🦈", "AAAA 🦈🦈🦈🦈🦈", "AAAAA 🦈🦈🦈🦈🦈🦈"];
     const teams = {};
     const noodles = [];
     for (let team of TEAM_IDS) {
         teams[team] = [];
     }
+    let bar = document.getElementById("bar");
     for (const [day, start] of start_times.entries()) {
         const teams_chron = await chron_v2({type: "team", id: TEAM_IDS.join(","), at: add_sec(start, 5*60).toISOString()}, "force-cache");
         for (let team of teams_chron) {
@@ -71,7 +72,9 @@ async function main() {
         const idols = await chron_v2({type: "idols", at: add_sec(start, 5*60).toISOString(), count: 1}, "force-cache");
         noodles.push(idols[0].data.data.strictlyConfidential);
         console.log("loading day", day);
+        bar.style.width = (100*(day+1)/start_times.length) + "%";
     }
+    document.getElementById("progress").style.display = "none";
 
     const DEN_DENOM = -2768.5;
     const DEN_OFF = -1101.7398;
@@ -121,7 +124,7 @@ async function main() {
         columns.push(data);
     }
     for (const [i, level] of LEVELS.entries()) {
-        lines.push({value: 0.8-0.2*i, text: level, position: 'start'});
+        lines.push({value: 1-0.2*i, text: "⬇️ "+level, position: 'start'});
     }
     var chart = c3.generate({
         bindto: '#chart',
