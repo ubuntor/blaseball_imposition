@@ -1,21 +1,25 @@
-async function chron_v1(path, cache="default") {
-    const r = await fetch("https://api.sibr.dev/chronicler/v1"+path, {cache: cache});
+async function chron_v1(path, cache = "default") {
+    const r = await fetch("https://api.sibr.dev/chronicler/v1" + path, {
+        cache: cache
+    });
     const j = await r.json();
     return j.data;
 }
 
-async function chron_v2(params, cache="default") {
+async function chron_v2(params, cache = "default") {
     let query = new URLSearchParams();
     for (let p in params) {
         query.set(p, params[p]);
     }
-    const r = await fetch("https://api.sibr.dev/chronicler/v2/entities?"+query.toString(), {cache: cache});
+    const r = await fetch("https://api.sibr.dev/chronicler/v2/entities?" + query.toString(), {
+        cache: cache
+    });
     const j = await r.json();
     return j.items;
 }
 
 function add_sec(d, s) {
-    return new Date(d.getTime() + s*1000);
+    return new Date(d.getTime() + s * 1000);
 }
 
 async function main() {
@@ -25,7 +29,7 @@ async function main() {
     const time_map = await chron_v1("/time/map");
     for (let day of time_map) {
         // TODO: check that minisiestas are handled correctly
-        if (day.season === SEASON-1) {
+        if (day.season === SEASON - 1) {
             start_times[day.day] = add_sec(new Date(Date.parse(day.startTime)), 1);
         }
     }
@@ -65,21 +69,37 @@ async function main() {
     }
     let bar = document.getElementById("bar");
     for (const [day, start] of start_times.entries()) {
-        const teams_chron = await chron_v2({type: "team", id: TEAM_IDS.join(","), at: add_sec(start, 5*60).toISOString()}, "force-cache");
+        const teams_chron = await chron_v2({
+            type: "team",
+            id: TEAM_IDS.join(","),
+            at: add_sec(start, 5 * 60).toISOString()
+        }, "force-cache");
         for (let team of teams_chron) {
             teams[team.entityId].push(team.data);
         }
-        const idols = await chron_v2({type: "idols", at: add_sec(start, 5*60).toISOString(), count: 1}, "force-cache");
+        const idols = await chron_v2({
+            type: "idols",
+            at: add_sec(start, 5 * 60).toISOString(),
+            count: 1
+        }, "force-cache");
         noodles.push(idols[0].data.data.strictlyConfidential);
         console.log("loading day", day);
-        bar.style.width = (100*(day+1)/start_times.length) + "%";
+        bar.style.width = (100 * (day + 1) / start_times.length) + "%";
     }
     document.getElementById("progress").style.display = "none";
+
+    // TODO: noodle overrides for multiple seasons
+    const NOODLE_OVERRIDES = {
+        98: 8
+    }
+    for (let day in NOODLE_OVERRIDES) {
+        noodles[day] = NOODLE_OVERRIDES[day];
+    }
 
     const DEN_DENOM = -2768.5;
     const DEN_OFF = -1101.7398;
     const columns = [];
-    const colors = {
+    const COLORS = {
         "Breath Mints": "#00a455",
         "Crabs": "#cd7672",
         "Dale": "#8877ee",
@@ -102,62 +122,101 @@ async function main() {
         "Tigers": "#f05d14",
         "Wild Wings": "#c87152"
     };
+    const datasets = [];
     const lines = [];
     for (let team of TEAM_IDS) {
         let nickname = teams[team][0].nickname;
-        let data = [nickname];
+        let data = [];
         let [eVelocity, imPosition] = INITIAL[nickname];
         for (const [i, t] of teams[team].entries()) {
             let level = t.level;
             let noodle = noodles[i]
             let eDensity = t.eDensity;
             if (i > 0) {
-                eVelocity = 0.55*(eVelocity-imPosition+0.0388*noodle+(eDensity+DEN_OFF)/DEN_DENOM);
+                eVelocity = 0.55 * (eVelocity - imPosition + 0.0388 * noodle + (eDensity + DEN_OFF) / DEN_DENOM);
                 imPosition += eVelocity;
             }
-            let expected_level = Math.floor((1-imPosition)*5);
+            let expected_level = Math.floor((1 - imPosition) * 5);
             if (level !== expected_level) {
                 console.log("ANOMALY:", nickname, i, eDensity, imPosition, noodle, level, expected_level);
             }
             data.push(imPosition);
         }
-        columns.push(data);
+        datasets.push({
+            label: nickname,
+            backgroundColor: COLORS[nickname],
+            borderColor: COLORS[nickname],
+            data: data,
+            borderWidth: 1,
+            pointRadius: 2
+        });
     }
-    const x = ['x'];
-    for (let i = 0; i < start_times.length; i++) {
-        x.push(i+1);
-    }
-    columns.push(x);
     for (const [i, level] of LEVELS.entries()) {
-        lines.push({value: 0.8-0.2*i, text: "⬆️ "+level, position: 'start'});
+        lines.push({
+            value: 0.8 - 0.2 * i,
+            text: "⬆️ " + level,
+            position: 'start'
+        });
     }
-    var chart = c3.generate({
-        bindto: '#chart',
-        size: {
-            height: 480
-        },
+    const labels = [];
+    for (let i = 0; i < start_times.length; i++) {
+        labels.push((i + 1).toString());
+    }
+    const config = {
+        type: 'line',
         data: {
-            x: 'x',
-            columns: columns,
-            colors: colors
+            labels: labels,
+            datasets: datasets,
         },
-        zoom: {
-            enabled: true
-        },
-        axis: {
-            x: {
-                label: 'Day'
+        options: {
+            animation: false,
+            interaction: {
+                intersect: false,
+                mode: 'index'
             },
-            y: {
-                label: 'imPosition'
-            }
-        },
-        grid: {
-            y: {
-                lines: lines
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Day'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'imPosition'
+                    }
+                }
+            },
+            plugins: {
+                zoom: {
+                    pan: {
+                        enabled: true,
+                        mode: 'xy',
+                        modifierKey: 'ctrl',
+                    },
+                    zoom: {
+                        enabled: true,
+                        mode: 'xy',
+                        drag: {
+                            borderColor: 'rgb(54, 162, 235)',
+                            borderWidth: 1,
+                            backgroundColor: 'rgba(54, 162, 235, 0.3)'
+                        }
+                    }
+                },
+                tooltip: {
+                    itemSort: (a, b, data) => b.yLabel - a.yLabel
+                }
             }
         }
-    });
+    };
+
+    window.chart = new Chart(document.getElementById('chart'), config);
+}
+
+function resetZoom() {
+    window.chart.resetZoom();
 }
 
 main();
