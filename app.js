@@ -156,7 +156,7 @@ async function main() {
             borderColor: COLORS[nickname] + "60",
             data: data,
             borderWidth: 1,
-            pointRadius: 2
+            pointRadius: 2.5
         });
     }
     const annotations = {};
@@ -232,7 +232,7 @@ async function main() {
             tooltipEl.style.opacity = 1;
             tooltipEl.style.pointerEvents = 'none';
             tooltipEl.style.position = 'absolute';
-            tooltipEl.style.transform = 'translate(10%, -50%)';
+            tooltipEl.style.transform = 'translate(10%, 0%)';
             tooltipEl.style.font = "12px 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
 
             const table = document.createElement('table');
@@ -260,60 +260,82 @@ async function main() {
         }
 
         // Set Text
-        /*if (tooltip.body) {
-            const title = "Day " + tooltip.title[0];
-            const bodyLines = tooltip.body.map(b => b.lines);
-            //console.log(tooltip.dataPoints);
-            const tableHead = document.createElement('thead');
+        const title = "Day " + tooltip.title[0];
+        const bodyLines = tooltip.body.map(b => b.lines);
+        
+        const tableHead = document.createElement('thead');
 
-            const tr = document.createElement('tr');
-            tr.style.borderWidth = 0;
-            const th = document.createElement('th');
-            th.style.borderWidth = 0;
-            const text = document.createTextNode(title);
-            th.appendChild(text);
-            tr.appendChild(th);
-            tableHead.appendChild(tr);
+        const tr = document.createElement('tr');
+        tr.style.borderWidth = 0;
+        const th = document.createElement('th');
+        th.style.borderWidth = 0;
+        th.colSpan = 3;
+        const text = document.createTextNode(title);
+        th.appendChild(text);
+        tr.appendChild(th);
+        tableHead.appendChild(tr);
 
-            const tableBody = document.createElement('tbody');
-            bodyLines.forEach((body, i) => {
-                const colors = tooltip.labelColors[i];
+        const tableBody = document.createElement('tbody');
+        const dataPoints = [...tooltip.dataPoints].sort((a, b) => b.raw - a.raw);
 
-                const span = document.createElement('span');
-                span.style.background = colors.backgroundColor;
-                span.style.borderColor = colors.borderColor;
-                span.style.borderWidth = '2px';
-                span.style.marginRight = '10px';
-                span.style.height = '10px';
-                span.style.width = '10px';
-                span.style.display = 'inline-block';
+        let curLevel = null;
 
+        dataPoints.forEach(dataPoint => {
+            const computedLevel = Math.floor((1-dataPoint.raw)*5);
+            if (computedLevel !== curLevel) {
+                curLevel = computedLevel;
                 const tr = document.createElement('tr');
-                tr.style.backgroundColor = 'inherit';
                 tr.style.borderWidth = 0;
-
-                const td = document.createElement('td');
-                td.style.borderWidth = 0;
-
-                const text = document.createTextNode(body);
-
-                td.appendChild(span);
-                td.appendChild(text);
-                tr.appendChild(td);
-                tableBody.appendChild(tr);
-            });
-
-            const tableRoot = tooltipEl.querySelector('table');
-
-            // Remove old children
-            while (tableRoot.firstChild) {
-                tableRoot.firstChild.remove();
+                const th = document.createElement('th');
+                th.style.borderWidth = 0;
+                th.colSpan = 3;
+                const text = document.createTextNode(LEVELS[computedLevel]);
+                th.appendChild(text);
+                tr.appendChild(th);
+                tableBody.appendChild(th);
             }
 
-            // Add new children
-            tableRoot.appendChild(tableHead);
-            tableRoot.appendChild(tableBody);
-        }*/
+            const dataset = dataPoint.dataset;
+
+            const span = document.createElement('span');
+            span.style.background = dataset.backgroundColor;
+            span.style.borderColor = dataset.borderColor;
+            span.style.borderWidth = '2px';
+            span.style.marginRight = '10px';
+            span.style.height = '10px';
+            span.style.width = '10px';
+            span.style.display = 'inline-block';
+
+            const tr = document.createElement('tr');
+            tr.style.backgroundColor = 'inherit';
+            tr.style.borderWidth = 0;
+
+            const td = document.createElement('td');
+            td.style.borderWidth = 0;
+
+            const text = document.createTextNode(dataset.label);
+            td.appendChild(span);
+            td.appendChild(text);
+            tr.appendChild(td);
+
+            const td2 = document.createElement('td');
+            td2.style.borderWidth = 0;
+            td2.style.textAlign = "right";
+            td2.appendChild(document.createTextNode(dataPoint.raw.toFixed(4)));
+            tr.appendChild(td2);
+            tableBody.appendChild(tr);
+        });
+
+        const tableRoot = tooltipEl.querySelector('table');
+
+        // Remove old children
+        while (tableRoot.firstChild) {
+            tableRoot.firstChild.remove();
+        }
+
+        // Add new children
+        tableRoot.appendChild(tableHead);
+        tableRoot.appendChild(tableBody);
 
         const {
             offsetLeft: positionX,
@@ -324,14 +346,14 @@ async function main() {
 
         // Display, position, and set styles for font
         tooltipEl.style.opacity = 1;
-        tooltipEl.style.top = positionY + (height/2) + 'px';
+        tooltipEl.style.top = (positionY + 20) + 'px';
         tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
         if (tooltip.caretX < width/2) {
-            tooltipEl.style.transform = "translate(10%, -50%)";
+            tooltipEl.style.transform = "translate(10%, 0%)";
             tooltipEl.style.left = positionX + tooltip.caretX + 'px';
             tooltipEl.style.right = "";
         } else {
-            tooltipEl.style.transform = "translate(-10%, -50%)";
+            tooltipEl.style.transform = "translate(-10%, 0%)";
             tooltipEl.style.right = positionX + (width-tooltip.caretX) + 'px';
             tooltipEl.style.left = "";
         }
