@@ -93,37 +93,43 @@ async function main() {
         98: 8
     }
     for (let day in NOODLE_OVERRIDES) {
+        console.log(`overriding noodle ${day}: ${noodles[day]} -> ${NOODLE_OVERRIDES[day]}`);
         noodles[day] = NOODLE_OVERRIDES[day];
     }
+    console.log(noodles);
 
     const DEN_DENOM = -2768.5;
     const DEN_OFF = -1101.7398;
     const columns = [];
     const COLORS = {
-        "Breath Mints": "#00a455",
+        "Breath Mints": "#509e77",
         "Crabs": "#cd7672",
         "Dale": "#8877ee",
-        "Firefighters": "#ff3714",
+        "Firefighters": "#ff4230",
         "Flowers": "#cc66dd",
-        "Fridays": "#50a210",
+        "Fridays": "#04a321",
         "Garages": "#3f88fd",
-        "Jazz Hands": "#6388c8",
+        "Georgias": "#339991",
+        "Jazz Hands": "#6b95b1",
         "Lift": "#f032c9",
         "Lovers": "#dd6699",
         "Magic": "#f94965",
-        "Millennials": "#888888",
-        "Moist Talkers": "#3399bb",
-        "Pies": "#339988",
-        "Shoe Thieves": "#bc8519",
-        "Spies": "#9988AA",
-        "Steaks": "#ec5a74",
+        "Mechanics": "#998800",
+        "Millennials": "#aa77aa",
+        "Moist Talkers": "#009bc2",
+        "Pies": "#339991",
+        "Shoe Thieves": "#6388c8",
+        "Spies": "#9980ba",
+        "Steaks": "#b2838d",
         "Sunbeams": "#aa8855",
         "Tacos": "#aa66ee",
         "Tigers": "#f05d14",
-        "Wild Wings": "#c87152"
+        "Wild Wings": "#cc7733",
+        "Worms": "#aa8877"
     };
     const datasets = [];
-    const lines = [];
+    let yMin = Infinity;
+    let yMax = -Infinity;
     for (let team of TEAM_IDS) {
         let nickname = teams[team][0].nickname;
         let data = [];
@@ -141,23 +147,196 @@ async function main() {
                 console.log("ANOMALY:", nickname, i, eDensity, imPosition, noodle, level, expected_level);
             }
             data.push(imPosition);
+            yMin = Math.min(yMin, imPosition);
+            yMax = Math.max(yMax, imPosition);
         }
         datasets.push({
             label: nickname,
             backgroundColor: COLORS[nickname],
-            borderColor: COLORS[nickname],
+            borderColor: COLORS[nickname] + "60",
             data: data,
             borderWidth: 1,
             pointRadius: 2
         });
     }
+    const annotations = {};
     for (const [i, level] of LEVELS.entries()) {
-        lines.push({
-            value: 0.8 - 0.2 * i,
-            text: "⬆️ " + level,
-            position: 'start'
-        });
+        if (i > 0) {
+            annotations["line" + i] = {
+                type: 'line',
+                yMin: 1 - 0.2 * i,
+                yMax: 1 - 0.2 * i,
+                borderColor: 'rgba(0,0,0,0.5)',
+                borderWidth: 1,
+                display: true
+            };
+        }
+        annotations["level" + i] = {
+            type: 'line',
+            yMin: 0.9 - 0.2 * i,
+            yMax: 0.9 - 0.2 * i,
+            borderColor: "transparent",
+            borderWidth: 0,
+            display: true,
+            label: {
+                content: level,
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                xPadding: 2,
+                yPadding: 2,
+                cornerRadius: 2,
+                position: "start",
+                enabled: true,
+                font: {
+                    size: 12,
+                    style: "normal"
+                }
+            }
+        };
     }
+
+    function add_vert(x, label) {
+        annotations[label] = {
+            type: 'line',
+            xMin: x,
+            xMax: x,
+            borderColor: 'rgba(0,0,0,0.5)',
+            borderWidth: 1,
+            display: true,
+            label: {
+                content: label,
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                position: "end",
+                enabled: true,
+                xPadding: 2,
+                yPadding: 2,
+                cornerRadius: 2,
+                font: {
+                    size: 10,
+                    style: "normal"
+                }
+            }
+        };
+    };
+    add_vert(27.5, "Earlsiesta");
+    add_vert(72.5, "Latesiesta");
+    add_vert(99.5, "Endseason");
+
+    const getOrCreateTooltip = (chart) => {
+        let tooltipEl = chart.canvas.parentNode.querySelector('div');
+
+        if (!tooltipEl) {
+            tooltipEl = document.createElement('div');
+            tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+            tooltipEl.style.borderRadius = '3px';
+            tooltipEl.style.color = 'white';
+            tooltipEl.style.opacity = 1;
+            tooltipEl.style.pointerEvents = 'none';
+            tooltipEl.style.position = 'absolute';
+            tooltipEl.style.transform = 'translate(10%, -50%)';
+            tooltipEl.style.font = "12px 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
+
+            const table = document.createElement('table');
+            table.style.margin = '0px';
+
+            tooltipEl.appendChild(table);
+            chart.canvas.parentNode.appendChild(tooltipEl);
+        }
+
+        return tooltipEl;
+    };
+
+    const externalTooltipHandler = (context) => {
+        // Tooltip Element
+        const {
+            chart,
+            tooltip
+        } = context;
+        const tooltipEl = getOrCreateTooltip(chart);
+
+        // Hide if no tooltip
+        if (tooltip.opacity === 0) {
+            tooltipEl.style.opacity = 0;
+            return;
+        }
+
+        // Set Text
+        /*if (tooltip.body) {
+            const title = "Day " + tooltip.title[0];
+            const bodyLines = tooltip.body.map(b => b.lines);
+            //console.log(tooltip.dataPoints);
+            const tableHead = document.createElement('thead');
+
+            const tr = document.createElement('tr');
+            tr.style.borderWidth = 0;
+            const th = document.createElement('th');
+            th.style.borderWidth = 0;
+            const text = document.createTextNode(title);
+            th.appendChild(text);
+            tr.appendChild(th);
+            tableHead.appendChild(tr);
+
+            const tableBody = document.createElement('tbody');
+            bodyLines.forEach((body, i) => {
+                const colors = tooltip.labelColors[i];
+
+                const span = document.createElement('span');
+                span.style.background = colors.backgroundColor;
+                span.style.borderColor = colors.borderColor;
+                span.style.borderWidth = '2px';
+                span.style.marginRight = '10px';
+                span.style.height = '10px';
+                span.style.width = '10px';
+                span.style.display = 'inline-block';
+
+                const tr = document.createElement('tr');
+                tr.style.backgroundColor = 'inherit';
+                tr.style.borderWidth = 0;
+
+                const td = document.createElement('td');
+                td.style.borderWidth = 0;
+
+                const text = document.createTextNode(body);
+
+                td.appendChild(span);
+                td.appendChild(text);
+                tr.appendChild(td);
+                tableBody.appendChild(tr);
+            });
+
+            const tableRoot = tooltipEl.querySelector('table');
+
+            // Remove old children
+            while (tableRoot.firstChild) {
+                tableRoot.firstChild.remove();
+            }
+
+            // Add new children
+            tableRoot.appendChild(tableHead);
+            tableRoot.appendChild(tableBody);
+        }*/
+
+        const {
+            offsetLeft: positionX,
+            offsetTop: positionY,
+            offsetWidth: width,
+            offsetHeight: height
+        } = chart.canvas;
+
+        // Display, position, and set styles for font
+        tooltipEl.style.opacity = 1;
+        tooltipEl.style.top = positionY + (height/2) + 'px';
+        tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+        if (tooltip.caretX < width/2) {
+            tooltipEl.style.transform = "translate(10%, -50%)";
+            tooltipEl.style.left = positionX + tooltip.caretX + 'px';
+            tooltipEl.style.right = "";
+        } else {
+            tooltipEl.style.transform = "translate(-10%, -50%)";
+            tooltipEl.style.right = positionX + (width-tooltip.caretX) + 'px';
+            tooltipEl.style.left = "";
+        }
+    };
+
     const labels = [];
     for (let i = 0; i < start_times.length; i++) {
         labels.push((i + 1).toString());
@@ -169,6 +348,9 @@ async function main() {
             datasets: datasets,
         },
         options: {
+            onClick: (e) => {
+                window.chart.resetZoom();
+            },
             animation: false,
             interaction: {
                 intersect: false,
@@ -179,13 +361,25 @@ async function main() {
                     title: {
                         display: true,
                         text: 'Day'
+                    },
+                    grid: {
+                        drawOnChartArea: false,
+                        borderColor: "black",
+                        tickColor: "black"
                     }
                 },
                 y: {
                     title: {
                         display: true,
                         text: 'imPosition'
-                    }
+                    },
+                    grid: {
+                        drawOnChartArea: false,
+                        borderColor: "black",
+                        tickColor: "black"
+                    },
+                    min: Math.floor(yMin * 10) / 10,
+                    max: Math.ceil(yMax * 10) / 10
                 }
             },
             plugins: {
@@ -206,17 +400,23 @@ async function main() {
                     }
                 },
                 tooltip: {
-                    itemSort: (a, b, data) => b.yLabel - a.yLabel
+                    enabled: false,
+                    external: externalTooltipHandler
+                },
+                annotation: {
+                    annotations: annotations
+                },
+                legend: {
+                    position: "bottom",
+                    labels: {
+                        boxWidth: 12
+                    }
                 }
             }
         }
     };
 
     window.chart = new Chart(document.getElementById('chart'), config);
-}
-
-function resetZoom() {
-    window.chart.resetZoom();
 }
 
 main();
