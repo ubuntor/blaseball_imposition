@@ -96,7 +96,41 @@ async function main() {
         console.log(`overriding noodle ${day}: ${noodles[day]} -> ${NOODLE_OVERRIDES[day]}`);
         noodles[day] = NOODLE_OVERRIDES[day];
     }
-    console.log(noodles);
+
+    const annotations = {};
+    for (const [i, level] of LEVELS.entries()) {
+        if (i > 0) {
+            annotations["line" + i] = {
+                type: 'line',
+                yMin: 1 - 0.2 * i,
+                yMax: 1 - 0.2 * i,
+                borderColor: 'rgba(0,0,0,0.5)',
+                borderWidth: 1,
+                display: true
+            };
+        }
+        annotations["level" + i] = {
+            type: 'line',
+            yMin: 0.9 - 0.2 * i,
+            yMax: 0.9 - 0.2 * i,
+            borderColor: "transparent",
+            borderWidth: 0,
+            display: true,
+            label: {
+                content: level,
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                xPadding: 2,
+                yPadding: 2,
+                cornerRadius: 2,
+                position: "start",
+                enabled: true,
+                font: {
+                    size: 12,
+                    style: "normal"
+                }
+            }
+        };
+    }
 
     const DEN_DENOM = -2768.5;
     const DEN_OFF = -1101.7398;
@@ -145,6 +179,12 @@ async function main() {
             let expected_level = Math.floor((1 - imPosition) * 5);
             if (level !== expected_level) {
                 console.log("ANOMALY:", nickname, i, eDensity, imPosition, noodle, level, expected_level);
+                annotations[nickname+i] = {
+                    type: 'point',
+                    xValue: i,
+                    yValue: imPosition,
+                    backgroundColor: "#ff000040"
+                }
             }
             data.push(imPosition);
             yMin = Math.min(yMin, imPosition);
@@ -159,40 +199,19 @@ async function main() {
             pointRadius: 2.5
         });
     }
-    const annotations = {};
-    for (const [i, level] of LEVELS.entries()) {
-        if (i > 0) {
-            annotations["line" + i] = {
-                type: 'line',
-                yMin: 1 - 0.2 * i,
-                yMax: 1 - 0.2 * i,
-                borderColor: 'rgba(0,0,0,0.5)',
-                borderWidth: 1,
-                display: true
-            };
-        }
-        annotations["level" + i] = {
-            type: 'line',
-            yMin: 0.9 - 0.2 * i,
-            yMax: 0.9 - 0.2 * i,
-            borderColor: "transparent",
-            borderWidth: 0,
-            display: true,
-            label: {
-                content: level,
-                backgroundColor: 'rgba(0,0,0,0.7)',
-                xPadding: 2,
-                yPadding: 2,
-                cornerRadius: 2,
-                position: "start",
-                enabled: true,
-                font: {
-                    size: 12,
-                    style: "normal"
-                }
-            }
-        };
-    }
+
+
+    datasets.push({
+        label: "Noodle",
+        backgroundColor: "#ffbe00",
+        borderColor: "#ffbe00",
+        data: noodles,
+        borderWidth: 1,
+        pointRadius: 1,
+        yAxisID: 'y2'
+    });
+
+
 
     function add_vert(x, label) {
         annotations[label] = {
@@ -281,21 +300,25 @@ async function main() {
         let curLevel = null;
 
         dataPoints.forEach(dataPoint => {
-            const computedLevel = Math.floor((1 - dataPoint.raw) * 5);
-            if (computedLevel !== curLevel) {
-                curLevel = computedLevel;
-                const tr = document.createElement('tr');
-                tr.style.borderWidth = 0;
-                const th = document.createElement('th');
-                th.style.borderWidth = 0;
-                th.colSpan = 3;
-                const text = document.createTextNode(LEVELS[computedLevel]);
-                th.appendChild(text);
-                tr.appendChild(th);
-                tableBody.appendChild(th);
-            }
-
             const dataset = dataPoint.dataset;
+            if (dataset.label === "Noodle") {
+                var valueText = dataPoint.raw;
+            } else {
+                const computedLevel = Math.floor((1 - dataPoint.raw) * 5);
+                if (computedLevel !== curLevel) {
+                    curLevel = computedLevel;
+                    const tr = document.createElement('tr');
+                    tr.style.borderWidth = 0;
+                    const th = document.createElement('th');
+                    th.style.borderWidth = 0;
+                    th.colSpan = 3;
+                    const text = document.createTextNode(LEVELS[computedLevel]);
+                    th.appendChild(text);
+                    tr.appendChild(th);
+                    tableBody.appendChild(th);
+                }
+                var valueText = dataPoint.raw.toFixed(4);
+            }
 
             const span = document.createElement('span');
             span.style.background = dataset.backgroundColor;
@@ -321,7 +344,7 @@ async function main() {
             const td2 = document.createElement('td');
             td2.style.borderWidth = 0;
             td2.style.textAlign = "right";
-            td2.appendChild(document.createTextNode(dataPoint.raw.toFixed(4)));
+            td2.appendChild(document.createTextNode(valueText));
             tr.appendChild(td2);
             tableBody.appendChild(tr);
         });
@@ -402,7 +425,21 @@ async function main() {
                     },
                     min: Math.floor(yMin * 10) / 10,
                     max: Math.ceil(yMax * 10) / 10
-                }
+                },
+                y2: {
+                    title: {
+                        display: true,
+                        text: 'noodle'
+                    },
+                    grid: {
+                        drawOnChartArea: false,
+                        borderColor: "black",
+                        tickColor: "black"
+                    },
+                    min: 0,
+                    max: 20,
+                    position: "right"
+                },
             },
             plugins: {
                 zoom: {
