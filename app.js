@@ -262,7 +262,7 @@ async function main() {
         // Set Text
         const title = "Day " + tooltip.title[0];
         const bodyLines = tooltip.body.map(b => b.lines);
-        
+
         const tableHead = document.createElement('thead');
 
         const tr = document.createElement('tr');
@@ -281,7 +281,7 @@ async function main() {
         let curLevel = null;
 
         dataPoints.forEach(dataPoint => {
-            const computedLevel = Math.floor((1-dataPoint.raw)*5);
+            const computedLevel = Math.floor((1 - dataPoint.raw) * 5);
             if (computedLevel !== curLevel) {
                 curLevel = computedLevel;
                 const tr = document.createElement('tr');
@@ -348,13 +348,13 @@ async function main() {
         tooltipEl.style.opacity = 1;
         tooltipEl.style.top = (positionY + 20) + 'px';
         tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
-        if (tooltip.caretX < width/2) {
+        if (tooltip.caretX < width / 2) {
             tooltipEl.style.transform = "translate(10%, 0%)";
             tooltipEl.style.left = positionX + tooltip.caretX + 'px';
             tooltipEl.style.right = "";
         } else {
             tooltipEl.style.transform = "translate(-10%, 0%)";
-            tooltipEl.style.right = positionX + (width-tooltip.caretX) + 'px';
+            tooltipEl.style.right = positionX + (width - tooltip.caretX) + 'px';
             tooltipEl.style.left = "";
         }
     };
