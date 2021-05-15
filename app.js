@@ -317,7 +317,7 @@ async function main() {
                     tr.appendChild(th);
                     tableBody.appendChild(th);
                 }
-                var valueText = dataPoint.raw.toFixed(4);
+                var valueText = dataPoint.raw.toFixed(5);
             }
 
             const span = document.createElement('span');
