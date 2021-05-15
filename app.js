@@ -217,9 +217,9 @@ async function main() {
             }
         };
     };
-    add_vert(27.5, "Earlsiesta");
-    add_vert(72.5, "Latesiesta");
-    add_vert(99.5, "Endseason");
+    add_vert(27.5-1, "Earlsiesta");
+    add_vert(72.5-1, "Latesiesta");
+    add_vert(99.5-1, "Endseason");
 
     const getOrCreateTooltip = (chart) => {
         let tooltipEl = chart.canvas.parentNode.querySelector('div');
