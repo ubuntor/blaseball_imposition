@@ -303,7 +303,11 @@ async function main() {
                     const th = document.createElement('th');
                     th.style.borderWidth = 0;
                     th.colSpan = 3;
-                    const text = document.createTextNode(LEVELS[computedLevel]);
+                    let levelText = LEVELS[computedLevel];
+                    if (levelText === undefined) {
+                        levelText = `- (level ${computedLevel})`;
+                    }
+                    const text = document.createTextNode(levelText);
                     th.appendChild(text);
                     tr.appendChild(th);
                     tableBody.appendChild(th);
