@@ -1,29 +1,29 @@
 const START_SEASON = 14;
 const INITIAL = {
-"Breath Mints":[-0.0002611909339390814,0.035159414359823414],
-"Crabs":[-0.0003405440309953961,-0.25922015852456726],
-"Dale":[-0.0002434004340347839,-0.08183279080859811],
-"Firefighters":[-0.00034187689577751013,-0.24930040420234464],
-"Flowers":[-0.00031863903252331093,-0.23384998057124712],
-"Fridays":[-0.00037110512327803247,-0.15395481395042748],
-"Garages":[-0.0002571567791968421,-0.11274139367368093],
-"Georgias":[-0.0002458231440869967,-0.15687789166439176],
-"Jazz Hands":[-0.00024832298628328414,-0.07561630779901267],
-"Lift":[-0.000363195481697655,0.0849832513006682],
-"Lovers":[-0.0002873457779101387,-0.09462693510812244],
-"Magic":[-0.0003155245916212712,-0.1178592833293892],
-"Mechanics":[-0.00023522718209653744,-0.08663387730554489],
-"Millennials":[-0.00039422672488991157,-0.16268527109028783],
-"Moist Talkers":[-0.0003843306140092916,-0.20535754240749637],
-"Pies":[-0.0002932102959131228,-0.1227394643648501],
-"Shoe Thieves":[-0.00030251409338769464,-0.09899229736981541],
-"Spies":[-0.00038780520769920513,-0.3352257889150364],
-"Steaks":[-0.0002629757746327754,-0.1859319425594258],
-"Sunbeams":[-0.0002799631303919763,-0.19026595831454648],
-"Tacos":[-0.00044655564329910844,-0.08070051055014356],
-"Tigers":[-0.00027205557034595265,-0.3448407065679949],
-"Wild Wings":[-0.000370862997157621,-0.13099299527052122],
-"Worms":[-0.00036694589799591876,-0.09945949656350071],
+    "Breath Mints": [-0.0002611909339390814, 0.035159414359823414],
+    "Crabs": [-0.0003405440309953961, -0.25922015852456726],
+    "Dale": [-0.0002434004340347839, -0.08183279080859811],
+    "Firefighters": [-0.00034187689577751013, -0.24930040420234464],
+    "Flowers": [-0.00031863903252331093, -0.23384998057124712],
+    "Fridays": [-0.00037110512327803247, -0.15395481395042748],
+    "Garages": [-0.0002571567791968421, -0.11274139367368093],
+    "Georgias": [-0.0002458231440869967, -0.15687789166439176],
+    "Jazz Hands": [-0.00024832298628328414, -0.07561630779901267],
+    "Lift": [-0.000363195481697655, 0.0849832513006682],
+    "Lovers": [-0.0002873457779101387, -0.09462693510812244],
+    "Magic": [-0.0003155245916212712, -0.1178592833293892],
+    "Mechanics": [-0.00023522718209653744, -0.08663387730554489],
+    "Millennials": [-0.00039422672488991157, -0.16268527109028783],
+    "Moist Talkers": [-0.0003843306140092916, -0.20535754240749637],
+    "Pies": [-0.0002932102959131228, -0.1227394643648501],
+    "Shoe Thieves": [-0.00030251409338769464, -0.09899229736981541],
+    "Spies": [-0.00038780520769920513, -0.3352257889150364],
+    "Steaks": [-0.0002629757746327754, -0.1859319425594258],
+    "Sunbeams": [-0.0002799631303919763, -0.19026595831454648],
+    "Tacos": [-0.00044655564329910844, -0.08070051055014356],
+    "Tigers": [-0.00027205557034595265, -0.3448407065679949],
+    "Wild Wings": [-0.000370862997157621, -0.13099299527052122],
+    "Worms": [-0.00036694589799591876, -0.09945949656350071],
 }
 const LEVELS = ["0D", "1D", "2D", "3D", "C", "Low A 🦈", "High A 🦈🦈", "AA 🦈🦈🦈", "AAA 🦈🦈🦈🦈", "AAAA 🦈🦈🦈🦈🦈", "AAAAA 🦈🦈🦈🦈🦈🦈"];
 // 1-indexed season, day
@@ -74,15 +74,17 @@ const COLORS = {
 
 
 async function main() {
-    const r = await fetch("data.json", {cache: "no-cache"});
+    const r = await fetch("data.json", {
+        cache: "no-cache"
+    });
     const data = await r.json();
 
-    const MAX_SEASON = START_SEASON+data.length-1;
+    const MAX_SEASON = START_SEASON + data.length - 1;
 
     for (let season in NOODLE_OVERRIDES) {
         for (let day in NOODLE_OVERRIDES[season]) {
             console.log(`overriding noodle season ${season} day ${day}: ${data[season-START_SEASON].noodles[day-1]} -> ${NOODLE_OVERRIDES[season][day]}`);
-            data[season-START_SEASON].noodles[day-1] = NOODLE_OVERRIDES[season][day];
+            data[season - START_SEASON].noodles[day - 1] = NOODLE_OVERRIDES[season][day];
         }
     }
 
@@ -181,9 +183,9 @@ async function main() {
                 let computedLevel = Math.floor((1 - imPosition) * 5);
                 if (level !== undefined && level !== computedLevel) {
                     console.log(`ANOMALY: ${nickname} season ${season} day ${i+1} expected level ${level}, got ${computedLevel}! imPosition: ${imPosition}, noodle: ${noodle}`);
-                    annotations[nickname+i] = {
+                    annotations[nickname + i] = {
                         type: 'point',
-                        xValue: xStart+i,
+                        xValue: xStart + i,
                         yValue: imPosition,
                         radius: 5,
                         backgroundColor: "#ff000080"
@@ -208,7 +210,7 @@ async function main() {
         // annotations mess with y range, so manually calculate min and max
         let yMin = Infinity;
         let yMax = -Infinity;
-        const end = i === seasonX.length-1 ? noodles.length : seasonX[i+1];
+        const end = i === seasonX.length - 1 ? noodles.length : seasonX[i + 1];
         for (let j = seasonX[i]; j < end; j++) {
             for (let dataset of datasets) {
                 yMin = Math.min(yMin, dataset.data[j]);
@@ -402,7 +404,7 @@ async function main() {
                     ticks: {
                         maxRotation: 0
                     },
-                    min: seasonX[seasonX.length-1],
+                    min: seasonX[seasonX.length - 1],
                     max: noodles.length
                 },
                 y: {
@@ -415,8 +417,8 @@ async function main() {
                         borderColor: "black",
                         tickColor: "black"
                     },
-                    min: yRanges[yRanges.length-1][0],
-                    max: yRanges[yRanges.length-1][1]
+                    min: yRanges[yRanges.length - 1][0],
+                    max: yRanges[yRanges.length - 1][1]
                 },
                 y2: {
                     title: {
@@ -451,8 +453,8 @@ async function main() {
                     }
                 },
                 tooltip: {
-                   enabled: false,
-                   external: externalTooltipHandler
+                    enabled: false,
+                    external: externalTooltipHandler
                 },
                 annotation: {
                     annotations: annotations
@@ -491,23 +493,23 @@ async function main() {
         }
     });
 
-    slider.noUiSlider.on('update', function () {
+    slider.noUiSlider.on('update', function() {
         const vals = slider.noUiSlider.get();
-        const s1 = (+vals[0])-START_SEASON;
-        const s2 = (+vals[1])-START_SEASON;
+        const s1 = (+vals[0]) - START_SEASON;
+        const s2 = (+vals[1]) - START_SEASON;
         window.chart.options.scales.x.min = seasonX[s1];
-        window.chart.options.scales.x.max = s2 === seasonX.length-1 ? noodles.length : seasonX[s2+1];
+        window.chart.options.scales.x.max = s2 === seasonX.length - 1 ? noodles.length : seasonX[s2 + 1];
         let yMin = yRanges[s1][0];
         let yMax = yRanges[s1][1];
-        for (var i = s1+1; i <= s2; i++) {
+        for (var i = s1 + 1; i <= s2; i++) {
             yMin = Math.min(yMin, yRanges[i][0]);
             yMax = Math.max(yMax, yRanges[i][1]);
         }
         window.chart.options.scales.y.min = yMin;
         window.chart.options.scales.y.max = yMax;
         window.chart.update();
+        window.chart.resetZoom();
         console.log(s1, s2);
-
     });
 
     function clickOnPip() {
