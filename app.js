@@ -72,6 +72,7 @@ const COLORS = {
     "Worms": "#aa8877"
 };
 
+
 async function main() {
     const r = await fetch("data.json", {cache: "no-cache"});
     const data = await r.json();
