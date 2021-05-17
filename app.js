@@ -219,7 +219,6 @@ async function main() {
         }
         yRanges.push([Math.floor(yMin * 10) / 10, Math.ceil(yMax * 10) / 10]);
     }
-    console.log(yRanges);
 
     datasets.push({
         label: "Noodle",
@@ -508,8 +507,6 @@ async function main() {
         window.chart.options.scales.y.min = yMin;
         window.chart.options.scales.y.max = yMax;
         window.chart.update();
-        window.chart.resetZoom();
-        console.log(s1, s2);
     });
 
     function clickOnPip() {
