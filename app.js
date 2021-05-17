@@ -145,7 +145,7 @@ async function main() {
                 }
             }
         };
-    };
+    }
 
     const datasets = [];
     let noodles = [];
@@ -373,6 +373,27 @@ async function main() {
         }
     };
 
+    var originalLimits = {
+        x: {
+            min: seasonX[seasonX.length - 1],
+            max: noodles.length
+        },
+        y: {
+            min: yRanges[yRanges.length - 1][0],
+            max: yRanges[yRanges.length - 1][1]
+        }
+    };
+
+    function resetZoom() {
+        window.chart.options.scales.x.min = originalLimits.x.min;
+        window.chart.options.scales.x.max = originalLimits.x.max;
+        window.chart.options.scales.y.min = originalLimits.y.min;
+        window.chart.options.scales.y.max = originalLimits.y.max;
+        window.chart.options.scales.y2.min = 0;
+        window.chart.options.scales.y2.max = 20;
+        window.chart.update();
+    }
+
     const config = {
         type: 'line',
         data: {
@@ -381,7 +402,7 @@ async function main() {
         },
         options: {
             onClick: (e) => {
-                window.chart.resetZoom();
+                resetZoom();
             },
             animation: false,
             aspectRatio: 2.2,
@@ -496,17 +517,17 @@ async function main() {
         const vals = slider.noUiSlider.get();
         const s1 = (+vals[0]) - START_SEASON;
         const s2 = (+vals[1]) - START_SEASON;
-        window.chart.options.scales.x.min = seasonX[s1];
-        window.chart.options.scales.x.max = s2 === seasonX.length - 1 ? noodles.length : seasonX[s2 + 1];
+        originalLimits.x.min = seasonX[s1];
+        originalLimits.x.max = s2 === seasonX.length - 1 ? noodles.length : seasonX[s2 + 1];
         let yMin = yRanges[s1][0];
         let yMax = yRanges[s1][1];
         for (var i = s1 + 1; i <= s2; i++) {
             yMin = Math.min(yMin, yRanges[i][0]);
             yMax = Math.max(yMax, yRanges[i][1]);
         }
-        window.chart.options.scales.y.min = yMin;
-        window.chart.options.scales.y.max = yMax;
-        window.chart.update();
+        originalLimits.y.min = yMin;
+        originalLimits.y.max = yMax;
+        resetZoom();
     });
 
     function clickOnPip() {
