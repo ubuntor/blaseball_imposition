@@ -41,6 +41,9 @@ const NOODLE_OVERRIDES = {
     17: {
         99: 9,
         100: 7
+    },
+    19: {
+        2: 11
     }
 }
 const DEN_DENOM = -2768.5;
