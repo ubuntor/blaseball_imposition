@@ -72,7 +72,8 @@ const COLORS = {
     "Tacos": "#aa66ee",
     "Tigers": "#f05d14",
     "Wild Wings": "#cc7733",
-    "Worms": "#aa8877"
+    "Worms": "#aa8877",
+    "Noodle": "#ffbe00"
 };
 
 
@@ -237,8 +238,8 @@ async function main() {
 
     datasets.push({
         label: "Noodle",
-        backgroundColor: "#ffbe00",
-        borderColor: "#ffbe00",
+        backgroundColor: COLORS["Noodle"],
+        borderColor: COLORS["Noodle"],
         data: noodles,
         borderWidth: 1,
         radius: 0,
@@ -502,13 +503,58 @@ async function main() {
                     position: "bottom",
                     labels: {
                         boxWidth: 12
-                    }
+                    },
+                    onHover: (e, legendItem, legend) => {
+                        for (let dataset of window.chart.data.datasets) {
+                            if (dataset.label === legendItem.text) {
+                                dataset.borderWidth = 3;
+                                dataset.backgroundColor = COLORS[dataset.label];
+                                dataset.borderColor = COLORS[dataset.label];
+                            } else {
+                                dataset.borderWidth = 1;
+                                dataset.backgroundColor = COLORS[dataset.label] + "40";
+                                dataset.borderColor = COLORS[dataset.label] + "40";
+                            }
+                        }
+                        window.chart.isHovering = true;
+                        window.chart.update();
+                    },
                 }
             }
         }
     };
 
     window.chart = new Chart(document.getElementById('chart'), config);
+    window.chart.isHovering = false;
+
+    function resetLegend() {
+        for (let dataset of window.chart.data.datasets) {
+            if (dataset.label === "Noodle") {
+                dataset.borderWidth = 1;
+            } else {
+                dataset.borderWidth = 2;
+            }
+            dataset.backgroundColor = COLORS[dataset.label];
+            dataset.borderColor = COLORS[dataset.label];
+        }
+        window.chart.update();
+    }
+
+    window.chart.canvas.addEventListener('mousemove', (e) => {
+        if (window.chart.isHovering) {
+            if (e.layerX < window.chart.legend.left || window.chart.legend.right < e.layerX ||
+                e.layerY < window.chart.legend.top || window.chart.legend.bottom < e.layerY) {
+                window.chart.isHovering = false;
+                resetLegend();
+            }
+        }
+    });
+    window.chart.canvas.addEventListener('mouseout', (e) => {
+        if (window.chart.isHovering) {
+            window.chart.isHovering = false;
+            resetLegend();
+        }
+    });
 
     const slider = document.getElementById('seasons')
 
@@ -531,7 +577,6 @@ async function main() {
             density: 2
         }
     });
-
     slider.noUiSlider.on('update', function() {
         const vals = slider.noUiSlider.get();
         const s1 = (+vals[0]) - START_SEASON;
@@ -553,7 +598,6 @@ async function main() {
         var value = Number(this.getAttribute('data-value'));
         slider.noUiSlider.set(value);
     }
-
     for (let pip of slider.querySelectorAll('.noUi-value')) {
         pip.addEventListener('click', clickOnPip);
     }
