@@ -1,37 +1,47 @@
-// TODO: multiple seasons
-const SEASON = 18;
-// TODO: this is only for s18
-const TEAM_IDS = ["105bc3ff-1320-4e37-8ef0-8d595cb95dd0", "d9f89a8a-c563-493e-9d64-78e4f9a55d4a", "ca3f1c8c-c025-4d8e-8eef-5be6accbeb16", "c73b705c-40ad-4633-a6ed-d357ee2e2bcf", "bfd38797-8404-4b38-8b82-341da28b1f83", "bb4a9de5-c924-4923-a0cb-9d1445f1ee5d", "b72f3061-f573-40d7-832a-5ad475bd7909", "b63be8c2-576a-4d6e-8daf-814f8bcea96f", "b024e975-1c4a-4575-8936-a3754a08806a", "adc5b394-8f76-416d-9ce9-813706877b84", "a37f9158-7f82-46bc-908c-c9e2dda7c33b", "9debc64f-74b7-4ae1-a4d6-fce0144b6ea5", "979aee4a-6d80-4863-bf1c-ee1a78e06024", "8d87c468-699a-47a8-b40d-cfb73a5660ad", "878c1bf6-0d21-4659-bfee-916c8314d69c", "7966eb04-efcc-499b-8f03-d13916330531", "747b8e4a-7e50-4638-a973-ea7950a3e739", "57ec08cc-0411-4643-b304-0e80dbc15ac7", "46358869-dce9-4a01-bfba-ac24fc56f57e", "3f8bbb15-61c0-4e3f-8e4a-907a5fb1565e", "36569151-a2fb-43c1-9df7-2df512424c82", "eb67ae5e-c4bf-46ca-bbbc-425cd34182ff", "23e4cbc1-e9cd-47fa-a35b-bfa06f726cb7", "f02aeae2-5e6a-4098-9842-02d2273f25c7"];
+const START_SEASON = 14;
 const INITIAL = {
-    'Garages': [-0.026909257283943003, -0.03629465489673271],
-    'Pies': [-0.02675687786256802, -0.07838434209674607],
-    'Millennials': [-0.026825076528807685, -0.045055984094797275],
-    'Flowers': [-0.026882226359353535, 0.035709737685937486],
-    'Mechanics': [-0.026852297988299637, 0.11029919604294866],
-    'Wild Wings': [-0.026959035838864432, 0.08193549373183846],
-    'Tigers': [-0.02689988972415722, -0.07192523100836015],
-    'Magic': [-0.02675156232922479, -0.16606757359221996],
-    'Tacos': [-0.027033665801672765, -0.0031090086379730493],
-    'Crabs': [-0.026836522900112146, -0.07397353263442558],
-    'Fridays': [-0.01585056941393788, -0.15415598415620485],
-    'Spies': [-0.02690406814819206, -0.08777701535603094],
-    'Jazz Hands': [-0.02683249563248326, -0.11928918124334802],
-    'Breath Mints': [-0.026824722473956942, -0.01953550770498054],
-    'Steaks': [-0.02694170187834794, -0.12228255988228035],
-    'Dale': [-0.026751032217306122, 0.06077978098422218],
-    'Lovers': [-0.026867638884796236, -0.007308713529376641],
-    'Worms': [-0.02692168814016255, -0.15712719747639028],
-    'Shoe Thieves': [-0.02684159136203873, -0.19004192891741542],
-    'Lift': [-0.026878382659903822, 0.07115937988902471],
-    'Firefighters': [-0.02687474669227539, -0.11959804415497671],
-    'Georgias': [-0.02692073013381523, -0.06536883977643457],
-    'Moist Talkers': [-0.02693604516447873, 0.004706570895140812],
-    'Sunbeams': [-0.026859221321570034, 0.02150231524093019],
+"Breath Mints":[-0.0002611909339390814,0.035159414359823414],
+"Crabs":[-0.0003405440309953961,-0.25922015852456726],
+"Dale":[-0.0002434004340347839,-0.08183279080859811],
+"Firefighters":[-0.00034187689577751013,-0.24930040420234464],
+"Flowers":[-0.00031863903252331093,-0.23384998057124712],
+"Fridays":[-0.00037110512327803247,-0.15395481395042748],
+"Garages":[-0.0002571567791968421,-0.11274139367368093],
+"Georgias":[-0.0002458231440869967,-0.15687789166439176],
+"Jazz Hands":[-0.00024832298628328414,-0.07561630779901267],
+"Lift":[-0.000363195481697655,0.0849832513006682],
+"Lovers":[-0.0002873457779101387,-0.09462693510812244],
+"Magic":[-0.0003155245916212712,-0.1178592833293892],
+"Mechanics":[-0.00023522718209653744,-0.08663387730554489],
+"Millennials":[-0.00039422672488991157,-0.16268527109028783],
+"Moist Talkers":[-0.0003843306140092916,-0.20535754240749637],
+"Pies":[-0.0002932102959131228,-0.1227394643648501],
+"Shoe Thieves":[-0.00030251409338769464,-0.09899229736981541],
+"Spies":[-0.00038780520769920513,-0.3352257889150364],
+"Steaks":[-0.0002629757746327754,-0.1859319425594258],
+"Sunbeams":[-0.0002799631303919763,-0.19026595831454648],
+"Tacos":[-0.00044655564329910844,-0.08070051055014356],
+"Tigers":[-0.00027205557034595265,-0.3448407065679949],
+"Wild Wings":[-0.000370862997157621,-0.13099299527052122],
+"Worms":[-0.00036694589799591876,-0.09945949656350071],
 }
 const LEVELS = ["0D", "1D", "2D", "3D", "C", "Low A 🦈", "High A 🦈🦈", "AA 🦈🦈🦈", "AAA 🦈🦈🦈🦈", "AAAA 🦈🦈🦈🦈🦈", "AAAAA 🦈🦈🦈🦈🦈🦈"];
-// TODO: noodle overrides for multiple seasons
+// 1-indexed season, day
 const NOODLE_OVERRIDES = {
-    98: 8
+    15: {
+        27: 17,
+        28: 17,
+        99: 4,
+        114: 9
+    },
+    16: {
+        99: 11,
+        117: 9
+    },
+    17: {
+        99: 9,
+        100: 7
+    }
 }
 const DEN_DENOM = -2768.5;
 const DEN_OFF = -1101.7398;
@@ -62,68 +72,17 @@ const COLORS = {
     "Worms": "#aa8877"
 };
 
-async function chron_v1(path, cache = "default") {
-    const r = await fetch("https://api.sibr.dev/chronicler/v1" + path, {
-        cache: cache
-    });
-    const j = await r.json();
-    return j.data;
-}
-
-async function chron_v2(params, cache = "default") {
-    let query = new URLSearchParams();
-    for (let p in params) {
-        query.set(p, params[p]);
-    }
-    const r = await fetch("https://api.sibr.dev/chronicler/v2/entities?" + query.toString(), {
-        cache: cache
-    });
-    const j = await r.json();
-    return j.items;
-}
-
-function add_sec(d, s) {
-    return new Date(d.getTime() + s * 1000);
-}
-
 async function main() {
-    const start_times = [];
-    const time_map = await chron_v1("/time/map");
-    for (let day of time_map) {
-        // TODO: check that minisiestas are handled correctly
-        if (day.season === SEASON - 1) {
-            start_times[day.day] = add_sec(new Date(Date.parse(day.startTime)), 1);
-        }
-    }
-    const teams = {};
-    const noodles = [];
-    for (let team of TEAM_IDS) {
-        teams[team] = [];
-    }
-    let bar = document.getElementById("bar");
-    for (const [day, start] of start_times.entries()) {
-        const teams_chron = await chron_v2({
-            type: "team",
-            id: TEAM_IDS.join(","),
-            at: add_sec(start, 5 * 60).toISOString()
-        }, "force-cache");
-        for (let team of teams_chron) {
-            teams[team.entityId].push(team.data);
-        }
-        const idols = await chron_v2({
-            type: "idols",
-            at: add_sec(start, 5 * 60).toISOString(),
-            count: 1
-        }, "force-cache");
-        noodles.push(idols[0].data.data.strictlyConfidential);
-        console.log("loading day", day);
-        bar.style.width = (100 * (day + 1) / start_times.length) + "%";
-    }
-    document.getElementById("progress").style.display = "none";
+    const r = await fetch("data.json", {cache: "no-cache"});
+    const data = await r.json();
 
-    for (let day in NOODLE_OVERRIDES) {
-        console.log(`overriding noodle ${day}: ${noodles[day]} -> ${NOODLE_OVERRIDES[day]}`);
-        noodles[day] = NOODLE_OVERRIDES[day];
+    const MAX_SEASON = START_SEASON+data.length-1;
+
+    for (let season in NOODLE_OVERRIDES) {
+        for (let day in NOODLE_OVERRIDES[season]) {
+            console.log(`overriding noodle season ${season} day ${day}: ${data[season-START_SEASON].noodles[day-1]} -> ${NOODLE_OVERRIDES[season][day]}`);
+            data[season-START_SEASON].noodles[day-1] = NOODLE_OVERRIDES[season][day];
+        }
     }
 
     const annotations = {};
@@ -161,56 +120,6 @@ async function main() {
         };
     }
 
-    const columns = [];
-    const datasets = [];
-    let yMin = Infinity;
-    let yMax = -Infinity;
-    for (let team of TEAM_IDS) {
-        let nickname = teams[team][0].nickname;
-        let data = [];
-        let [eVelocity, imPosition] = INITIAL[nickname];
-        for (const [i, t] of teams[team].entries()) {
-            let level = t.level;
-            let noodle = noodles[i]
-            let eDensity = t.eDensity;
-            if (i > 0) {
-                eVelocity = 0.55 * (eVelocity - imPosition + 0.0388 * noodle + (eDensity + DEN_OFF) / DEN_DENOM);
-                imPosition += eVelocity;
-            }
-            let computedLevel = Math.floor((1 - imPosition) * 5);
-            if (level !== computedLevel) {
-                console.log(`ANOMALY: ${nickname} Day ${i+1} expected level ${level}, got ${computedLevel}! imPosition: ${eDensity}, noodle: ${noodle}`);
-                annotations[nickname+i] = {
-                    type: 'point',
-                    xValue: i,
-                    yValue: imPosition,
-                    radius: 5,
-                    backgroundColor: "#ff000040"
-                }
-            }
-            data.push(imPosition);
-            yMin = Math.min(yMin, imPosition);
-            yMax = Math.max(yMax, imPosition);
-        }
-        datasets.push({
-            label: nickname,
-            backgroundColor: COLORS[nickname],
-            borderColor: COLORS[nickname] + "60",
-            data: data,
-            borderWidth: 1,
-            pointRadius: 2.5
-        });
-    }
-    datasets.push({
-        label: "Noodle",
-        backgroundColor: "#ffbe00",
-        borderColor: "#ffbe00",
-        data: noodles,
-        borderWidth: 1,
-        pointRadius: 1,
-        yAxisID: 'y2'
-    });
-
     function add_vert(x, label) {
         annotations[label] = {
             type: 'line',
@@ -234,9 +143,90 @@ async function main() {
             }
         };
     };
-    add_vert(27.5-1, "Earlsiesta");
-    add_vert(72.5-1, "Latesiesta");
-    add_vert(99.5-1, "Endseason");
+
+    const datasets = [];
+    let noodles = [];
+    for (let d of data) {
+        noodles = noodles.concat(d.noodles);
+    }
+    const labels = [];
+
+    const seasonX = [];
+    let x = 0;
+    for (const [s, d] of data.entries()) {
+        const season = s + START_SEASON;
+        add_vert(x, `S${season}`);
+        seasonX.push(x);
+        for (let i = 1; i <= d.noodles.length; i++) {
+            labels.push(`S${season}D${i}`);
+        }
+        x += d.noodles.length;
+    }
+
+    for (let nickname in data[0].teams) {
+        let teamPos = [];
+        let [eVelocity, imPosition] = INITIAL[nickname];
+        for (const [s, d] of data.entries()) {
+            const season = s + START_SEASON;
+            const xStart = seasonX[s];
+            for (const [i, t] of d.teams[nickname].entries()) {
+                let level = t.level;
+                let noodle = d.noodles[i]
+                let eDensity = t.eDensity;
+                if (i > 0) {
+                    eVelocity = 0.55 * (eVelocity - imPosition + 0.0388 * noodle + (eDensity + DEN_OFF) / DEN_DENOM);
+                    imPosition += eVelocity;
+                }
+                let computedLevel = Math.floor((1 - imPosition) * 5);
+                if (level !== undefined && level !== computedLevel) {
+                    console.log(`ANOMALY: ${nickname} season ${season} day ${i+1} expected level ${level}, got ${computedLevel}! imPosition: ${imPosition}, noodle: ${noodle}`);
+                    annotations[nickname+i] = {
+                        type: 'point',
+                        xValue: xStart+i,
+                        yValue: imPosition,
+                        radius: 5,
+                        backgroundColor: "#ff000080"
+                    }
+                }
+                teamPos.push(imPosition);
+            }
+
+        }
+        datasets.push({
+            label: nickname,
+            backgroundColor: COLORS[nickname],
+            borderColor: COLORS[nickname],
+            data: teamPos,
+            borderWidth: 2,
+            radius: 0,
+        });
+    }
+
+    const yRanges = [];
+    for (let i = 0; i < seasonX.length; i++) {
+        // annotations mess with y range, so manually calculate min and max
+        let yMin = Infinity;
+        let yMax = -Infinity;
+        const end = i === seasonX.length-1 ? noodles.length : seasonX[i+1];
+        for (let j = seasonX[i]; j < end; j++) {
+            for (let dataset of datasets) {
+                yMin = Math.min(yMin, dataset.data[j]);
+                yMax = Math.max(yMax, dataset.data[j]);
+            }
+        }
+        yRanges.push([Math.floor(yMin * 10) / 10, Math.ceil(yMax * 10) / 10]);
+    }
+    console.log(yRanges);
+
+    datasets.push({
+        label: "Noodle",
+        backgroundColor: "#ffbe00",
+        borderColor: "#ffbe00",
+        data: noodles,
+        borderWidth: 1,
+        radius: 0,
+        yAxisID: 'y2'
+    });
 
     const getOrCreateTooltip = (chart) => {
         let tooltipEl = chart.canvas.parentNode.querySelector('div');
@@ -251,6 +241,7 @@ async function main() {
             tooltipEl.style.position = 'absolute';
             tooltipEl.style.transform = 'translate(10%, 0%)';
             tooltipEl.style.font = "12px 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
+            tooltipEl.style.zIndex = 99;
 
             const table = document.createElement('table');
             table.style.margin = '0px';
@@ -277,7 +268,7 @@ async function main() {
         }
 
         // Set Text
-        const title = "Day " + tooltip.title[0];
+        const title = tooltip.title[0];
         const bodyLines = tooltip.body.map(b => b.lines);
 
         const tableHead = document.createElement('thead');
@@ -380,10 +371,6 @@ async function main() {
         }
     };
 
-    const labels = [];
-    for (let i = 0; i < start_times.length; i++) {
-        labels.push((i + 1).toString());
-    }
     const config = {
         type: 'line',
         data: {
@@ -395,6 +382,7 @@ async function main() {
                 window.chart.resetZoom();
             },
             animation: false,
+            aspectRatio: 2.2,
             interaction: {
                 intersect: false,
                 mode: 'index'
@@ -409,7 +397,12 @@ async function main() {
                         drawOnChartArea: false,
                         borderColor: "black",
                         tickColor: "black"
-                    }
+                    },
+                    ticks: {
+                        maxRotation: 0
+                    },
+                    min: seasonX[seasonX.length-1],
+                    max: noodles.length
                 },
                 y: {
                     title: {
@@ -421,8 +414,8 @@ async function main() {
                         borderColor: "black",
                         tickColor: "black"
                     },
-                    min: Math.floor(yMin * 10) / 10,
-                    max: Math.ceil(yMax * 10) / 10
+                    min: yRanges[yRanges.length-1][0],
+                    max: yRanges[yRanges.length-1][1]
                 },
                 y2: {
                     title: {
@@ -457,8 +450,8 @@ async function main() {
                     }
                 },
                 tooltip: {
-                    enabled: false,
-                    external: externalTooltipHandler
+                   enabled: false,
+                   external: externalTooltipHandler
                 },
                 annotation: {
                     annotations: annotations
@@ -474,6 +467,56 @@ async function main() {
     };
 
     window.chart = new Chart(document.getElementById('chart'), config);
+
+    const slider = document.getElementById('seasons')
+
+    noUiSlider.create(slider, {
+        start: [MAX_SEASON, MAX_SEASON],
+        step: 1,
+        connect: [false, true, false],
+        range: {
+            'min': START_SEASON,
+            'max': MAX_SEASON
+        },
+        pips: {
+            mode: 'steps',
+            filter: (value, type) => {
+                if (type !== 0) {
+                    return 1;
+                }
+                return type;
+            },
+            density: 2
+        }
+    });
+
+    slider.noUiSlider.on('update', function () {
+        const vals = slider.noUiSlider.get();
+        const s1 = (+vals[0])-START_SEASON;
+        const s2 = (+vals[1])-START_SEASON;
+        window.chart.options.scales.x.min = seasonX[s1];
+        window.chart.options.scales.x.max = s2 === seasonX.length-1 ? noodles.length : seasonX[s2+1];
+        let yMin = yRanges[s1][0];
+        let yMax = yRanges[s1][1];
+        for (var i = s1+1; i <= s2; i++) {
+            yMin = Math.min(yMin, yRanges[i][0]);
+            yMax = Math.max(yMax, yRanges[i][1]);
+        }
+        window.chart.options.scales.y.min = yMin;
+        window.chart.options.scales.y.max = yMax;
+        window.chart.update();
+        console.log(s1, s2);
+
+    });
+
+    function clickOnPip() {
+        var value = Number(this.getAttribute('data-value'));
+        slider.noUiSlider.set(value);
+    }
+
+    for (let pip of slider.querySelectorAll('.noUi-value')) {
+        pip.addEventListener('click', clickOnPip);
+    }
 }
 
 main();

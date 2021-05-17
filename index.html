@@ -11,29 +11,34 @@
         height: 100%;
         width: 100%;
         margin: 0;
+        font: 12px 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
     }
-    #progress {
-        height: 30px;
-        background: gray;
+    .noUi-pips {   
+        line-height: 1.75;
     }
-    #bar {
-        height: 30px;
-        background: green;
-        width: 0%;
+    .noUi-value {
+        cursor: pointer;
+    }
+    #seasons {
+        margin: 0 40px;
+    }
+    #seasons-caption {
+        text-align: center;
     }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js" integrity="sha256-uVEHWRIr846/vAdLJeybWxjPNStREzOlqLMXjW/Saeo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js" integrity="sha256-eVNjHw5UeU0jUqPPpZHAkU1z4U+QFBBY488WvueTm88=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.0.0-beta.5/dist/chartjs-plugin-zoom.min.js" integrity="sha256-aCOnrERzQRB7gb5B1MV28p5Sb8O2FFiOBriRtn01cZ8=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.1/dist/chartjs-plugin-annotation.min.js" integrity="sha256-wYHP5DN3bJUekOul/d5IJGZ2TCeWUyqAirmGA+9VRRI=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.1.0/dist/nouislider.min.js" integrity="sha256-SBVKImf341hk4fWssv6/gQpWEKW+to8kQ31P0pxFNNE=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.1.0/dist/nouislider.min.css" integrity="sha256-+/hev/vsXpFLZjlSHeqFWTjBWStNFm56A+Uv+gfu9MU=" crossorigin="anonymous">
 </head>
 <body>
-    <div id="progress">
-        <div id="bar"></div>    
-    </div>
     <div>
         <canvas id="chart"></canvas>
     </div>
+    <div id="seasons-caption">Seasons</div>
+    <div id="seasons"></div>
     <script src='app.js'></script>
 </body>
 </html>
