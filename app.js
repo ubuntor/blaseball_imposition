@@ -185,13 +185,25 @@ async function main() {
                 }
                 let computedLevel = Math.floor((1 - imPosition) * 5);
                 if (level !== undefined && level !== computedLevel) {
-                    console.log(`ANOMALY: ${nickname} season ${season} day ${i+1} expected level ${level}, got ${computedLevel}! imPosition: ${imPosition}, noodle: ${noodle}`);
-                    annotations[nickname + i] = {
-                        type: 'point',
-                        xValue: xStart + i,
-                        yValue: imPosition,
-                        radius: 5,
-                        backgroundColor: "#ff000080"
+                    if (season === 14) {
+                        // known anomaly: season 14 is weird
+                        // maybe formula changed?
+                        annotations[nickname + i] = {
+                            type: 'point',
+                            xValue: xStart + i,
+                            yValue: imPosition,
+                            radius: 5,
+                            backgroundColor: "#ffff0080"
+                        }
+                    } else {
+                        console.log(`ANOMALY: ${nickname} season ${season} day ${i+1} expected level ${level}, got ${computedLevel}! imPosition: ${imPosition}, noodle: ${noodle}`);
+                        annotations[nickname + i] = {
+                            type: 'point',
+                            xValue: xStart + i,
+                            yValue: imPosition,
+                            radius: 5,
+                            backgroundColor: "#ff000080"
+                        }
                     }
                 }
                 teamPos.push(imPosition);
