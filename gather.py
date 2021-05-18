@@ -41,7 +41,7 @@ for season, starts in sorted(start_times.items()):
         noodle = idols['data']['data']['strictlyConfidential']
         noodles.append(noodle)
         print(season, day, noodle)
-    data.append({'teams': teams, 'noodles': noodles})
+    data.append({'teams': dict(sorted(teams.items())), 'noodles': noodles})
 
 with open('data.json','w') as f:
     json.dump(data, f)
