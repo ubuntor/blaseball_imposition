@@ -542,8 +542,8 @@ async function main() {
 
     window.chart.canvas.addEventListener('mousemove', (e) => {
         if (window.chart.isHovering) {
-            if (e.layerX < window.chart.legend.left || window.chart.legend.right < e.layerX ||
-                e.layerY < window.chart.legend.top || window.chart.legend.bottom < e.layerY) {
+            if (e.offsetX < window.chart.legend.left || window.chart.legend.right < e.offsetX ||
+                e.offsetY < window.chart.legend.top || window.chart.legend.bottom < e.offsetY) {
                 window.chart.isHovering = false;
                 resetLegend();
             }
@@ -556,8 +556,7 @@ async function main() {
         }
     });
 
-    const slider = document.getElementById('seasons')
-
+    const slider = document.getElementById('seasons');
     noUiSlider.create(slider, {
         start: [MAX_SEASON, MAX_SEASON],
         step: 1,
@@ -593,7 +592,6 @@ async function main() {
         originalLimits.y.max = yMax;
         resetZoom();
     });
-
     function clickOnPip() {
         var value = Number(this.getAttribute('data-value'));
         slider.noUiSlider.set(value);
@@ -601,6 +599,12 @@ async function main() {
     for (let pip of slider.querySelectorAll('.noUi-value')) {
         pip.addEventListener('click', clickOnPip);
     }
+
+    const chartContainer = document.getElementById('chart-container');
+    const flippy = document.getElementById('flippy');
+    flippy.addEventListener('click', function() {
+        chartContainer.classList.toggle('is-flipped');
+    });
 }
 
 main();

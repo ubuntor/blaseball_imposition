@@ -2,6 +2,7 @@
 <head>
     <meta charset="utf-8">
     <title>Blaseball imPosition</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.1.0/dist/nouislider.min.css" integrity="sha256-+/hev/vsXpFLZjlSHeqFWTjBWStNFm56A+Uv+gfu9MU=" crossorigin="anonymous">
     <style>
     html {
         height: 100%;
@@ -19,11 +20,28 @@
     .noUi-value {
         cursor: pointer;
     }
+    .noUi-pips-horizontal {
+        height: 0px;
+    }
     #seasons {
         margin: 0 40px;
     }
     #seasons-caption {
         text-align: center;
+    }
+    #chart-container {
+        perspective: 600px;
+        transition: transform 1s;
+        transform-style: preserve-3d;
+    }
+    #chart-container.is-flipped {
+        transform: rotateX(180deg);
+    }
+    #flippy-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 40px;
     }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js" integrity="sha256-uVEHWRIr846/vAdLJeybWxjPNStREzOlqLMXjW/Saeo=" crossorigin="anonymous"></script>
@@ -31,14 +49,16 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.0.0-beta.5/dist/chartjs-plugin-zoom.min.js" integrity="sha256-aCOnrERzQRB7gb5B1MV28p5Sb8O2FFiOBriRtn01cZ8=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.1/dist/chartjs-plugin-annotation.min.js" integrity="sha256-wYHP5DN3bJUekOul/d5IJGZ2TCeWUyqAirmGA+9VRRI=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/nouislider@15.1.0/dist/nouislider.min.js" integrity="sha256-SBVKImf341hk4fWssv6/gQpWEKW+to8kQ31P0pxFNNE=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.1.0/dist/nouislider.min.css" integrity="sha256-+/hev/vsXpFLZjlSHeqFWTjBWStNFm56A+Uv+gfu9MU=" crossorigin="anonymous">
 </head>
 <body>
-    <div>
+    <div id="chart-container">
         <canvas id="chart"></canvas>
     </div>
     <div id="seasons-caption">Seasons</div>
     <div id="seasons"></div>
+    <div id="flippy-container">
+        <button id="flippy">👆👇</button>
+    </div>
     <script src='app.js'></script>
 </body>
 </html>
