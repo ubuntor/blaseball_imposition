@@ -2,6 +2,7 @@
 <head>
     <meta charset="utf-8">
     <title>Blaseball imPosition</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.1.0/dist/nouislider.min.css" integrity="sha256-+/hev/vsXpFLZjlSHeqFWTjBWStNFm56A+Uv+gfu9MU=" crossorigin="anonymous">
     <style>
     html {
@@ -24,9 +25,9 @@
         height: 0px;
     }
     #seasons {
-        margin: 0 40px;
+        margin: 0 40px 40px 40px;
     }
-    #seasons-caption {
+    p {
         text-align: center;
     }
     #chart-container {
@@ -43,7 +44,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 40px;
+    }
+    #controls {
+        display: flex;
+        justify-content: center;
+        border-spacing: 15px 2px;
     }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js" integrity="sha256-uVEHWRIr846/vAdLJeybWxjPNStREzOlqLMXjW/Saeo=" crossorigin="anonymous"></script>
@@ -56,8 +61,39 @@
     <div id="chart-container">
         <canvas id="chart"></canvas>
     </div>
-    <div id="seasons-caption">Seasons</div>
+    <div><p>Seasons</p></div>
     <div id="seasons"></div>
+    <div>
+        <table id="controls">
+            <tr>
+                <th colspan="2">Controls</th>
+            </tr>
+            <tr>
+                <td>Hover chart</td>
+                <td>Show levels at day</td>
+            </tr>
+            <tr>
+                <td>Drag chart</td>
+                <td>Zoom</td>
+            </tr>
+            <tr>
+                <td>Click chart</td>
+                <td>Reset zoom</td>
+            </tr>
+            <tr>
+                <td>Hover legend</td>
+                <td>Focus series</td>
+            </tr>
+            <tr>
+                <td>Click legend</td>
+                <td>Toggle series</td>
+            </tr>
+            <tr>
+                <td>Double-click legend</td>
+                <td>Solo/unsolo series</td>
+            </tr>
+        </table>
+    </div>
     <div id="flippy-container">
         <button id="flippy">👆👇</button>
     </div>

@@ -506,7 +506,8 @@ async function main() {
                         boxWidth: 12
                     },
                     onHover: (e, legendItem, legend) => {
-                        for (let dataset of window.chart.data.datasets) {
+                        const chart = legend.chart;
+                        for (let dataset of chart.data.datasets) {
                             if (dataset.label === legendItem.text) {
                                 dataset.borderWidth = 3;
                                 dataset.backgroundColor = COLORS[dataset.label];
@@ -517,9 +518,36 @@ async function main() {
                                 dataset.borderColor = COLORS[dataset.label] + "40";
                             }
                         }
-                        window.chart.isHovering = true;
-                        window.chart.update();
+                        chart.isHovering = true;
+                        chart.update();
                     },
+                    onClick: (e, legendItem, legend) => {
+                        const index = legendItem.datasetIndex;
+                        const chart = legend.chart;
+                        if (chart.isDatasetVisible(index)) {
+                            chart.hide(index);
+                            legendItem.hidden = true;
+                        } else {
+                            chart.show(index);
+                            legendItem.hidden = false;
+                        }
+                        const now = Date.now();
+                        if (!chart.lastClick || now - chart.lastClick > 500) {
+                            chart.lastClick = now;
+                        } else {
+                            // double-click
+                            chart.lastClick = null;
+                            for (let i in chart.data.datasets) {
+                                if (+i === +index || chart.soloIndex === index) {
+                                    chart.getDatasetMeta(i).hidden = false;
+                                } else {
+                                    chart.getDatasetMeta(i).hidden = true;
+                                }
+                            }
+                            chart.soloIndex = index;
+                            chart.update();
+                        }
+                    }
                 }
             }
         }
