@@ -475,6 +475,7 @@ async function main() {
                         borderColor: "black",
                         tickColor: "black"
                     },
+                    reverse: true,
                     min: 0,
                     max: 20,
                     position: "right"
