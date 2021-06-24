@@ -103,37 +103,15 @@ async function main() {
     }
 
     const annotations = {};
-    for (const [i, level] of LEVELS.entries()) {
-        if (i > 0) {
-            annotations["line" + i] = {
-                type: 'line',
-                yMin: 1 - 0.2 * i,
-                yMax: 1 - 0.2 * i,
-                borderColor: 'rgba(0,0,0,0.5)',
-                borderWidth: 1,
-                display: true
-            };
-        }
-        annotations["level" + i] = {
+
+    function add_horz(y) {
+        annotations["line" + y] = {
             type: 'line',
-            yMin: 0.9 - 0.2 * i,
-            yMax: 0.9 - 0.2 * i,
-            borderColor: "transparent",
-            borderWidth: 0,
-            display: true,
-            label: {
-                content: level,
-                backgroundColor: 'rgba(0,0,0,0.7)',
-                xPadding: 2,
-                yPadding: 2,
-                cornerRadius: 2,
-                position: "start",
-                enabled: true,
-                font: {
-                    size: 12,
-                    style: "normal"
-                }
-            }
+            yMin: y,
+            yMax: y,
+            borderColor: 'rgba(0,0,0,0.5)',
+            borderWidth: 1,
+            display: true
         };
     }
 
@@ -155,6 +133,32 @@ async function main() {
                 cornerRadius: 2,
                 font: {
                     size: 10,
+                    style: "normal"
+                }
+            }
+        };
+    }
+
+    add_horz(-1.2);
+    for (const [i, level] of LEVELS.entries()) {
+        add_horz(1 - 0.2 * i);
+        annotations["level" + i] = {
+            type: 'line',
+            yMin: 0.9 - 0.2 * i,
+            yMax: 0.9 - 0.2 * i,
+            borderColor: "transparent",
+            borderWidth: 0,
+            display: true,
+            label: {
+                content: level,
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                xPadding: 2,
+                yPadding: 2,
+                cornerRadius: 2,
+                position: "start",
+                enabled: true,
+                font: {
+                    size: 12,
                     style: "normal"
                 }
             }
@@ -631,6 +635,7 @@ async function main() {
         originalLimits.y.max = yMax;
         resetZoom();
     });
+
     function clickOnPip() {
         var value = Number(this.getAttribute('data-value'));
         slider.noUiSlider.set(value);
