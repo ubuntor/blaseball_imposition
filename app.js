@@ -321,7 +321,7 @@ async function main() {
             if (dataset.label === "Noodle") {
                 var valueText = dataPoint.raw;
             } else {
-                const computedLevel = Math.max(0, Math.floor((1 - dataPoint.raw) * 5));
+                const computedLevel = Math.floor((1 - dataPoint.raw) * 5);
                 if (computedLevel !== curLevel) {
                     curLevel = computedLevel;
                     const tr = document.createElement('tr');
