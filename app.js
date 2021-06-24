@@ -194,7 +194,7 @@ async function main() {
                     eVelocity = 0.55 * (eVelocity - imPosition + 0.0388 * noodle + (eDensity + DEN_OFF) / DEN_DENOM);
                     imPosition += eVelocity;
                 }
-                let computedLevel = Math.floor((1 - imPosition) * 5);
+                let computedLevel = Math.max(0, Math.floor((1 - imPosition) * 5));
                 if (level !== undefined && level !== computedLevel) {
                     if (season === 14) {
                         // known anomaly: season 14 is weird
