@@ -24,7 +24,7 @@ for day in time_map:
 
 data = []
 
-fields = ['level', 'eDensity']
+fields = ['level', 'eDensity', 'imPosition']
 
 for season, starts in sorted(start_times.items()):
     assert set(starts) == set(range(len(starts))), f'season ${season} not contiguous!'
