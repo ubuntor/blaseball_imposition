@@ -32,7 +32,11 @@ for season, starts in sorted(start_times.items()):
     noodles = []
 
     for day, start in sorted(starts.items()):
-        for team in cache_chron_v2({"type": "team", 'at':time2s(start+timedelta(minutes=5))}):
+        if season == 21-1 and day == 83-1:
+            team_delta = 30 # oops siesta broke stuff
+        else:
+            team_delta = 5
+        for team in cache_chron_v2({"type": "team", 'at':time2s(start+timedelta(minutes=team_delta))}):
             team = team['data']
             if 'stadium' in team and team['stadium'] != None:
                 filtered_team = { field: team[field] for field in fields if field in team and team[field] != None }

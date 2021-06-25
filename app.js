@@ -26,7 +26,8 @@ const NOODLE_OVERRIDES = {
     },
     21: {
         28: 6,
-        70: 9
+        70: 9,
+        83: 5
     }
 }
 const START_SEASON = 14;
@@ -115,7 +116,7 @@ async function main() {
         };
     }
 
-    function add_vert(x, label) {
+    function add_vert(x, label, color) {
         annotations[label] = {
             type: 'line',
             xMin: x,
@@ -125,7 +126,7 @@ async function main() {
             display: true,
             label: {
                 content: label,
-                backgroundColor: 'rgba(0,0,0,0.7)',
+                backgroundColor: color,
                 position: "end",
                 enabled: true,
                 xPadding: 2,
@@ -176,12 +177,16 @@ async function main() {
     let x = 0;
     for (const [s, d] of data.entries()) {
         const season = s + START_SEASON;
-        add_vert(x, `S${season}`);
+        add_vert(x, `S${season}`, 'rgba(0,0,0,0.7)');
         seasonX.push(x);
         for (let i = 1; i <= d.noodles.length; i++) {
             labels.push(`S${season}D${i}`);
         }
         x += d.noodles.length;
+    }
+
+    function is_close(a,b) {
+        return Math.abs(a-b) < 0.000001;
     }
 
     for (let nickname in data[0].teams) {
@@ -199,7 +204,7 @@ async function main() {
                     imPosition += eVelocity;
                 }
                 let computedLevel = Math.max(0, Math.floor((1 - imPosition) * 5));
-                if (level !== undefined && level !== computedLevel) {
+                if ((level !== undefined && level !== computedLevel) || (season >= 21 && !is_close(imPosition, t.imPosition[1]))) {
                     if (season === 14) {
                         // known anomaly: season 14 is weird
                         // maybe formula changed?
@@ -211,7 +216,7 @@ async function main() {
                             backgroundColor: "#ffff0080"
                         }
                     } else {
-                        console.log(`ANOMALY: ${nickname} season ${season} day ${i+1} expected level ${level}, got ${computedLevel}! imPosition: ${imPosition}, noodle: ${noodle}`);
+                        console.log(`ANOMALY: ${nickname} season ${season} day ${i+1} expected level ${level}, got ${computedLevel}! imPosition: ${imPosition}, noodle: ${noodle}, given imPosition ${t.imPosition[1]}`);
                         annotations[nickname + i] = {
                             type: 'point',
                             xValue: xStart + i,
