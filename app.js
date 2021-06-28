@@ -325,7 +325,11 @@ async function main() {
         tableHead.appendChild(tr);
 
         const tableBody = document.createElement('tbody');
-        const dataPoints = [...tooltip.dataPoints].sort((a, b) => b.raw - a.raw);
+        const dataPoints = [...tooltip.dataPoints].sort((a, b) => {
+            let aVal = a.dataset.label === "Noodle" ? Infinity : a.raw;
+            let bVal = b.dataset.label === "Noodle" ? Infinity : b.raw;
+            return bVal - aVal;
+        });
 
         let curLevel = null;
 
