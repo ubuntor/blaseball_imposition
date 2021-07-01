@@ -31,7 +31,8 @@ const NOODLE_OVERRIDES = {
         115: 16
     },
     22: {
-        8: 1
+        8: 1,
+        69: 13
     }
 }
 const START_SEASON = 14;
@@ -190,7 +191,7 @@ async function main() {
     }
 
     function is_close(a,b) {
-        return Math.abs(a-b) < 0.000001;
+        return Math.abs(a-b) < 0.00000001;
     }
 
     for (let nickname in data[0].teams) {
@@ -203,7 +204,7 @@ async function main() {
                 let level = t.level;
                 let noodle = d.noodles[i]
                 let eDensity = t.eDensity;
-                if (i > 0) {
+                if (i > 0 && !(season == 22 && i == 57-1)) { // S22D57: imPosition didn't update
                     eVelocity = 0.55 * (eVelocity - imPosition + 0.0388 * noodle + (eDensity + DEN_OFF) / DEN_DENOM);
                     imPosition += eVelocity;
                 }
