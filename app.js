@@ -32,7 +32,8 @@ const NOODLE_OVERRIDES = {
     },
     22: {
         8: 1,
-        69: 13
+        69: 13,
+        99: 13
     }
 }
 const START_SEASON = 14;
