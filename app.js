@@ -200,7 +200,7 @@ async function main() {
     add_horz(-1.2);
     for (const [i, level] of LEVELS.entries()) {
         add_horz(1 - 0.2 * i);
-        add_level("level" + i, 0, seasonX[24 - START_SEASON], 0.9 - 0.2 * i, level);
+        add_level("level" + i, 0, seasonX[24 - START_SEASON] - 1, 0.9 - 0.2 * i, level);
     }
     for (const [i, level] of LEVELS_FLIPPED.entries()) {
         add_horz(1 - 0.2 * i);
