@@ -200,15 +200,15 @@ async function main() {
     add_horz(-1.2);
     for (const [i, level] of LEVELS.entries()) {
         add_horz(1 - 0.2 * i);
-        add_level("level" + i, 0, seasonX[23-START_SEASON], 0.9 - 0.2 * i, level);
+        add_level("level" + i, 0, seasonX[24 - START_SEASON], 0.9 - 0.2 * i, level);
     }
     for (const [i, level] of LEVELS_FLIPPED.entries()) {
         add_horz(1 - 0.2 * i);
-        add_level("level_flipped" + i, seasonX[23-START_SEASON], Infinity, 0.9 - 0.2 * i, level);
+        add_level("level_flipped" + i, seasonX[24 - START_SEASON], Infinity, 0.9 - 0.2 * i, level);
     }
 
-    function is_close(a,b) {
-        return Math.abs(a-b) < 0.00000001;
+    function is_close(a, b) {
+        return Math.abs(a - b) < 0.00000001;
     }
 
     for (let nickname in data[0].teams) {
@@ -221,7 +221,7 @@ async function main() {
                 let level = t.level;
                 let noodle = d.noodles[i]
                 let eDensity = t.eDensity;
-                if (i > 0 && !(season == 22 && i == 57-1)) { // S22D57: imPosition didn't update
+                if (i > 0 && !(season == 22 && i == 57 - 1)) { // S22D57: imPosition didn't update
                     eVelocity = 0.55 * (eVelocity - imPosition + 0.0388 * noodle + (eDensity + DEN_OFF) / DEN_DENOM);
                     imPosition += eVelocity;
                 }
@@ -364,7 +364,7 @@ async function main() {
                     const th = document.createElement('th');
                     th.style.borderWidth = 0;
                     th.colSpan = 3;
-                    let levelText = LEVELS[computedLevel];
+                    let levelText = (dataPoint.parsed.x >= seasonX[24 - START_SEASON]) ? LEVELS_FLIPPED[computedLevel] : LEVELS[computedLevel];
                     if (levelText === undefined) {
                         levelText = `- (level ${computedLevel})`;
                     }
