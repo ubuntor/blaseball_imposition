@@ -43,6 +43,7 @@ const NOODLE_OVERRIDES = {
 }
 const START_SEASON = 14;
 const LEVELS = ["0D", "1D", "2D", "3D", "C", "Low A 🦈", "High A 🦈🦈", "AA 🦈🦈🦈", "AAA 🦈🦈🦈🦈", "AAAA 🦈🦈🦈🦈🦈", "AAAAA 🦈🦈🦈🦈🦈🦈"];
+const LEVELS_FLIPPED = ["0D 🦈🦈🦈🦈🦈", "1D 🦈🦈🦈🦈", "2D 🦈🦈🦈", "3D 🦈🦈", "C 🦈", "Low A", "High A", "AA", "AAA", "AAAA", "AAAAA"];
 const DEN_DENOM = -2768.5;
 const DEN_OFF = -1101.7398;
 const COLORS = {
@@ -116,6 +117,25 @@ async function main() {
 
     const annotations = {};
 
+    const datasets = [];
+    let noodles = [];
+    for (let d of data) {
+        noodles = noodles.concat(d.noodles);
+    }
+    const labels = [];
+
+    const seasonX = [];
+    let x = 0;
+    for (const [s, d] of data.entries()) {
+        const season = s + START_SEASON;
+        add_vert(x, `S${season}`, 'rgba(0,0,0,0.7)');
+        seasonX.push(x);
+        for (let i = 1; i <= d.noodles.length; i++) {
+            labels.push(`S${season}D${i}`);
+        }
+        x += d.noodles.length;
+    }
+
     function add_horz(y) {
         annotations["line" + y] = {
             type: 'line',
@@ -151,13 +171,13 @@ async function main() {
         };
     }
 
-    add_horz(-1.2);
-    for (const [i, level] of LEVELS.entries()) {
-        add_horz(1 - 0.2 * i);
-        annotations["level" + i] = {
+    function add_level(label, xMin, xMax, y, level) {
+        annotations[label] = {
             type: 'line',
-            yMin: 0.9 - 0.2 * i,
-            yMax: 0.9 - 0.2 * i,
+            xMin: xMin,
+            xMax: xMax,
+            yMin: y,
+            yMax: y,
             borderColor: "transparent",
             borderWidth: 0,
             display: true,
@@ -177,23 +197,14 @@ async function main() {
         };
     }
 
-    const datasets = [];
-    let noodles = [];
-    for (let d of data) {
-        noodles = noodles.concat(d.noodles);
+    add_horz(-1.2);
+    for (const [i, level] of LEVELS.entries()) {
+        add_horz(1 - 0.2 * i);
+        add_level("level" + i, 0, seasonX[23-START_SEASON], 0.9 - 0.2 * i, level);
     }
-    const labels = [];
-
-    const seasonX = [];
-    let x = 0;
-    for (const [s, d] of data.entries()) {
-        const season = s + START_SEASON;
-        add_vert(x, `S${season}`, 'rgba(0,0,0,0.7)');
-        seasonX.push(x);
-        for (let i = 1; i <= d.noodles.length; i++) {
-            labels.push(`S${season}D${i}`);
-        }
-        x += d.noodles.length;
+    for (const [i, level] of LEVELS_FLIPPED.entries()) {
+        add_horz(1 - 0.2 * i);
+        add_level("level_flipped" + i, seasonX[23-START_SEASON], Infinity, 0.9 - 0.2 * i, level);
     }
 
     function is_close(a,b) {
