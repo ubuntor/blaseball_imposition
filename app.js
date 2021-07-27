@@ -39,6 +39,9 @@ const NOODLE_OVERRIDES = {
         28: 13,
         52: 12,
         117: 9
+    },
+    24: {
+        28: 7
     }
 }
 const START_SEASON = 14;
@@ -238,7 +241,7 @@ async function main() {
                             backgroundColor: "#ffff0080"
                         }
                     } else {
-                        console.log(`ANOMALY: ${nickname} season ${season} day ${i+1} expected level ${level}, got ${computedLevel}! imPosition: ${imPosition}, noodle: ${noodle}, given imPosition ${t.imPosition[1]}`);
+                        console.log(`ANOMALY: ${nickname} season ${season} day ${i+1} expected level ${level}, got ${computedLevel}! imPosition: ${imPosition}, noodle: ${noodle}, given imPosition ${t.imPosition[1]}, diff ${imPosition - t.imPosition[1]}`);
                         annotations[nickname + i] = {
                             type: 'point',
                             xValue: xStart + i,
