@@ -127,17 +127,6 @@ async function main() {
     }
     const labels = [];
 
-    const seasonX = [];
-    let x = 0;
-    for (const [s, d] of data.entries()) {
-        const season = s + START_SEASON;
-        add_vert(x, `S${season}`, 'rgba(0,0,0,0.7)');
-        seasonX.push(x);
-        for (let i = 1; i <= d.noodles.length; i++) {
-            labels.push(`S${season}D${i}`);
-        }
-        x += d.noodles.length;
-    }
 
     function add_horz(y) {
         annotations["line" + y] = {
@@ -150,7 +139,7 @@ async function main() {
         };
     }
 
-    function add_vert(x, label, color) {
+    function add_vert(x, label) {
         annotations[label] = {
             type: 'line',
             xMin: x,
@@ -160,7 +149,7 @@ async function main() {
             display: true,
             label: {
                 content: label,
-                backgroundColor: color,
+                backgroundColor: 'rgba(0,0,0,0.7)',
                 position: "end",
                 enabled: true,
                 xPadding: 2,
@@ -200,6 +189,18 @@ async function main() {
         };
     }
 
+    const seasonX = [];
+    let x = 0;
+    for (const [s, d] of data.entries()) {
+        const season = s + START_SEASON;
+        add_vert(x, `S${season}`);
+        seasonX.push(x);
+        for (let i = 1; i <= d.noodles.length; i++) {
+            labels.push(`S${season}D${i}`);
+        }
+        x += d.noodles.length;
+    }
+
     add_horz(-1.2);
     for (const [i, level] of LEVELS.entries()) {
         add_horz(1 - 0.2 * i);
@@ -209,6 +210,11 @@ async function main() {
         add_horz(1 - 0.2 * i);
         add_level("level_flipped" + i, seasonX[24 - START_SEASON], Infinity, 0.9 - 0.2 * i, level);
     }
+
+    add_vert(seasonX[24-START_SEASON] + 3-1, 'Breath Mints incin');
+    add_vert(seasonX[24-START_SEASON] + 12-1, 'Fridays incin');
+    add_vert(seasonX[24-START_SEASON] + 29-1, 'Navigation');
+    add_vert(seasonX[24-START_SEASON] + 73-1, 'Rogue teams');
 
     function is_close(a, b) {
         return Math.abs(a - b) < 0.00000001;
@@ -224,9 +230,14 @@ async function main() {
                 let level = t.level;
                 let noodle = d.noodles[i]
                 let eDensity = t.eDensity;
-                if (i > 0 && !(season == 22 && i == 57 - 1)) { // S22D57: imPosition didn't update
-                    eVelocity = 0.55 * (eVelocity - imPosition + 0.0388 * noodle + (eDensity + DEN_OFF) / DEN_DENOM);
-                    imPosition += eVelocity;
+                let is_deceased = season === 24 && ((nickname === "Fridays" && i >= 13-1) || (nickname === "Breath Mints" && i >= 4-1));
+                if (season === 24 && i >= 29 - 1) { // S24D29: navigation map
+                    imPosition = t.imPosition[1];
+                } else {
+                    if (i > 0 && !(season === 22 && i === 57 - 1) && !is_deceased) { // S22D57: imPosition didn't update
+                        eVelocity = 0.55 * (eVelocity - imPosition + 0.0388 * noodle + (eDensity + DEN_OFF) / DEN_DENOM);
+                        imPosition += eVelocity;
+                    }
                 }
                 let computedLevel = Math.max(0, Math.floor((1 - imPosition) * 5));
                 if ((level !== undefined && level !== computedLevel) || (season >= 21 && !is_close(imPosition, t.imPosition[1]))) {
@@ -241,7 +252,7 @@ async function main() {
                             backgroundColor: "#ffff0080"
                         }
                     } else {
-                        console.log(`ANOMALY: ${nickname} season ${season} day ${i+1} expected level ${level}, got ${computedLevel}! imPosition: ${imPosition}, noodle: ${noodle}, given imPosition ${t.imPosition[1]}, diff ${imPosition - t.imPosition[1]}`);
+                        console.log(`ANOMALY: ${nickname} season ${season} day ${i+1} expected level ${level}, got ${computedLevel}! imPosition: ${imPosition}, noodle: ${noodle}, given imPosition ${t.imPosition[1]}, diff ${imPosition - t.imPosition[1]}`, t);
                         annotations[nickname + i] = {
                             type: 'point',
                             xValue: xStart + i,
