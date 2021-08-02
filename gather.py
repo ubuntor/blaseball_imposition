@@ -40,7 +40,9 @@ for season, starts in sorted(start_times.items()):
             team = team['data']
             if 'stadium' in team and team['stadium'] != None:
                 filtered_team = { field: team[field] for field in fields if field in team and team[field] != None }
-                teams[team['nickname']].append(filtered_team)
+                # Check scattered names first, then default
+                nickname = team.get('state', {}).get('scattered', {}).get('nickname', team['nickname'])
+                teams[nickname].append(filtered_team)
         idols = cache_chron_v2({'type': "idols", 'at':time2s(start), 'count':1})[0]
         noodle = idols['data']['data']['strictlyConfidential']
         noodles.append(noodle)
