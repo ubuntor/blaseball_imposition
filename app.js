@@ -646,7 +646,7 @@ async function main() {
 
     const slider = document.getElementById('seasons');
     noUiSlider.create(slider, {
-        start: [MAX_SEASON, MAX_SEASON],
+        start: [START_SEASON, MAX_SEASON],
         step: 1,
         connect: [false, true, false],
         range: {
